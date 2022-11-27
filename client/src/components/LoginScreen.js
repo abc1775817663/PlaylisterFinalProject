@@ -39,9 +39,9 @@ export default function LoginScreen() {
 
     return (
         <div>
-        <Grid container component="main" sx={{ height: '100vh' }}>
+        <Grid container component="main" sx={{ height: '100vh', paddingLeft: "120px"}}>
             <CssBaseline />
-            <Grid
+            {/* <Grid
                 item
                 xs={false}
                 sm={4}
@@ -54,24 +54,26 @@ export default function LoginScreen() {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
-            />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            /> */}
+            {/* <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square> */}
                 <Box
                     sx={{
                         my: 8,
                         mx: 4,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
+                        alignItems: 'center'
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                    <div style={{paddingRight: 100}}>
+                    <Avatar sx={{ m: 0, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    </div>
+                    <Typography component="h1" variant="h5" sx={{paddingRight: "100px"}}>
                         Sign in
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, paddingLeft:"150px", paddingRight: "250px" }}>
                         <TextField
                             margin="normal"
                             required
@@ -120,7 +122,7 @@ export default function LoginScreen() {
                     </Box>
                 </Box>
             </Grid>
-        </Grid>
+        {/* </Grid> */}
         <MUIErrorModal/>
         </div>
     );

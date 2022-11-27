@@ -72,9 +72,9 @@ function AuthContextProvider(props) {
         }
     }
 
-    auth.registerUser = async function(firstName, lastName, email, password, passwordVerify) {
+    auth.registerUser = async function(userName, firstName, lastName, email, password, passwordVerify) {
         var res = "success";
-        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify).catch(
+        const response = await api.registerUser(userName, firstName, lastName, email, password, passwordVerify).catch(
             (error) => {res = error.response.data.errorMessage}
         );
         if (res !== "success"){
