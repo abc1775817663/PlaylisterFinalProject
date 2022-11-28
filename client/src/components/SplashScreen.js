@@ -1,5 +1,8 @@
 import { Button } from "@mui/material"
 import logo from "../images/logo.png"
+import { useContext } from 'react'
+import AuthContext from "../auth"
+
 
 let handleCreateAccount = () => {
     window.location.href += "register";
@@ -9,10 +12,12 @@ let handleLogin = () => {
     window.location.href += "login"
 }
 
-let handleContinueAsGuest = () => {
-    
+let handleContinueAsGuest = (auth) => {
+    auth.continueAsGuest();
 }
 export default function SplashScreen() {
+    const { auth } = useContext(AuthContext);
+
     return (
         <div id="splash-screen">
             <div>
@@ -36,7 +41,7 @@ export default function SplashScreen() {
                         <Button style={{maxWidth: '400px', height:"50px", left: "20%", borderRadius: "20px", backgroundColor: "#253461"}}  variant="contained" onClick={handleLogin}>
                             Login
                         </Button>
-                        <Button style={{maxWidth: '400px', height:"50px", left: "20%", borderRadius: "20px", backgroundColor: "#253461"}}  variant="contained" onClick={handleContinueAsGuest}>
+                        <Button style={{maxWidth: '400px', height:"50px", left: "20%", borderRadius: "20px", backgroundColor: "#253461"}}  variant="contained" onClick={() => handleContinueAsGuest(auth)}>
                             Continue as Guest
                         </Button>
                     </div>

@@ -93,8 +93,8 @@ function ListCard(props) {
             onMouseLeave={handleMouseLeave}
             id={idNamePair._id}
             key={idNamePair._id}
-            sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-            style={{ width: '100%', fontSize: '32pt', backgroundColor: isHover? "#474457": "#8e89ad", borderRadius: 50 }}
+            sx={{ margin: '15px', display: 'flex', p: 1}}
+            style={{ height: '70px', width: '95%', fontSize: '20pt', backgroundColor: isHover? "#a19b8c": "#ffffff", borderRadius: 10, border: "2px solid black" }}
             button
             onClick={(event) => {
                 handleLoadList(event, idNamePair._id)
@@ -104,14 +104,14 @@ function ListCard(props) {
             <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
+                    <EditIcon style={{fontSize:'24pt'}} />
                 </IconButton>
             </Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
                     }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'48pt'}} />
+                    <DeleteIcon style={{fontSize:'24pt'}} />
                 </IconButton>
             </Box>
         </ListItem>
@@ -130,7 +130,7 @@ function ListCard(props) {
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
-                inputProps={{style: {fontSize: 48}}}
+                inputProps={{style: {fontSize: 24}}}
                 InputLabelProps={{style: {fontSize: 24}}}
                 autoFocus
             />

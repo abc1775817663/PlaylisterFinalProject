@@ -73,6 +73,7 @@ loginUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
+                userName: existingUser.userName,
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,  
                 email: existingUser.email              
@@ -120,7 +121,7 @@ registerUser = async (req, res) => {
                 })
         }
         console.log("password and password verify match");
-        const existingUser = await User.findOne({ email: email });
+        let existingUser = await User.findOne({ email: email });
         console.log("existingUser: " + existingUser);
         if (existingUser) {
             return res
@@ -129,6 +130,18 @@ registerUser = async (req, res) => {
                     success: false,
                     errorMessage: "An account with this email address already exists."
                 })
+        }
+        else{
+            existingUser = await User.findOne({ userName: userName });
+            if (existingUser) {
+                console.log("user name is not unique")
+                return res
+                    .status(400)
+                    .json({
+                        success: false,
+                        errorMessage: "An account with this user name already exists."
+                    })
+            }
         }
 
         const saltRounds = 10;

@@ -31,7 +31,8 @@ export const GlobalStoreActionType = {
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
     HIDE_MODALS: "HIDE_MODALS",
-    SET_ERROR_MSG: "SET_ERROR_MSG"
+    SET_ERROR_MSG: "SET_ERROR_MSG",
+    CHANGE_YOUTUBE_VIEW: "CHANGE_YOUTUBE_VIEW"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -58,7 +59,8 @@ function GlobalStoreContextProvider(props) {
         listNameActive: false,
         listIdMarkedForDeletion: null,
         listMarkedForDeletion: null,
-        errorMessage: null
+        errorMessage: null,
+        currentYouTubeVideoView: true
         
     });
     const history = useHistory();
@@ -87,6 +89,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -102,6 +105,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 })
             }
             // CREATE A NEW LIST
@@ -117,6 +121,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -132,6 +137,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -147,6 +153,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: payload.id,
                     listMarkedForDeletion: payload.playlist,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             // UPDATE A LIST
@@ -162,6 +169,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             // START EDITING A LIST NAME
@@ -177,6 +185,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             // 
@@ -192,6 +201,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             case GlobalStoreActionType.REMOVE_SONG: {
@@ -206,6 +216,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             case GlobalStoreActionType.HIDE_MODALS: {
@@ -220,6 +231,7 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null,
                     errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
                 });
             }
             case GlobalStoreActionType.SET_ERROR_MSG: {
@@ -234,6 +246,22 @@ function GlobalStoreContextProvider(props) {
                     listIdMarkedForDeletion: store.listIdMarkedForDeletion,
                     listMarkedForDeletion: store.listMarkedForDeletion,
                     errorMessage: payload,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView
+                });
+            }
+            case GlobalStoreActionType.CHANGE_YOUTUBE_VIEW: {
+                return setStore({
+                    currentModal : store.currentModal,
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    currentSongIndex: store.currentSongIndex,
+                    currentSong: store.currentSong,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.listNameActive,
+                    listIdMarkedForDeletion: store.listIdMarkedForDeletion,
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: !store.currentYouTubeVideoView
                 });
             }
             default:
@@ -278,8 +306,16 @@ function GlobalStoreContextProvider(props) {
         asyncChangeListName(id);
     }
 
+    store.changeYouTubeView = function() {
+        storeReducer({
+            type: GlobalStoreActionType.CHANGE_YOUTUBE_VIEW,
+            payload: {}
+        });
+        
+    }
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
+        console.log(2333);
         storeReducer({
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
@@ -291,7 +327,7 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
-        const response = await api.createPlaylist(newListName, [], auth.user.email);
+        const response = await api.createPlaylist(newListName, [], auth.user.email, auth.user.userName);
         console.log("createNewList response: " + response);
         if (response.status === 201) {
             tps.clearAllTransactions();
