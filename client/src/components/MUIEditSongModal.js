@@ -53,6 +53,7 @@ export default function MUIEditSongModal() {
     }
 
     return (
+        
             <div
                 class={"modal " + (store.isEditSongModalOpen() ? "is-visible" : "")} 
                 id="edit-song-modal" 

@@ -7,7 +7,7 @@ import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
 import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction'
 import UpdateSong_Transaction from '../transactions/UpdateSong_Transaction'
 import AuthContext from '../auth'
-import { listLike, currentSongIndex } from './constants'
+import { listLike, currentYouTubeSongIndex, sortOption } from './constants'
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -36,7 +36,8 @@ export const GlobalStoreActionType = {
     CHANGE_YOUTUBE_VIEW: "CHANGE_YOUTUBE_VIEW",
     UPDATE_PLAYLIST_OBJ: "UPDATE_PLAYLIST_OBJ",
     UPDATE: "UPDATE",
-    UPDATE_YOUTUBE_LIST: "UPDATE_YOUTUBE_LIST"
+    UPDATE_YOUTUBE_LIST: "UPDATE_YOUTUBE_LIST",
+    CHANGE_HOME_SCREEN_BUTTON_ACTIVE: "CHANGE_HOME_SCREEN_BUTTON_ACTIVE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -73,7 +74,9 @@ function GlobalStoreContextProvider(props) {
         errorMessage: null,
         currentYouTubeVideoView: true,
         playlistObj: {},
-        youTubeList: null
+        youTubeList: null,
+        youTubeSong: null,
+        homeScreenButtonActive: 1
         
     });
     const history = useHistory();
@@ -104,7 +107,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -122,7 +127,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 })
             }
             // CREATE A NEW LIST
@@ -140,7 +147,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -158,7 +167,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -176,7 +187,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             // UPDATE A LIST
@@ -194,7 +207,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             // START EDITING A LIST NAME
@@ -212,7 +227,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             // 
@@ -230,7 +247,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.REMOVE_SONG: {
@@ -247,7 +266,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.HIDE_MODALS: {
@@ -264,7 +285,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.SET_ERROR_MSG: {
@@ -281,7 +304,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: payload,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.CHANGE_YOUTUBE_VIEW: {
@@ -298,7 +323,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: !store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.UPDATE_PLAYLIST_OBJ: {
@@ -315,7 +342,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: payload,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
             case GlobalStoreActionType.UPDATE: {
@@ -332,7 +361,9 @@ function GlobalStoreContextProvider(props) {
                     errorMessage: store.errorMessage,
                     currentYouTubeVideoView: store.currentYouTubeVideoView,
                     playlistObj: store.playlistObj,
-                    youTubeList: store.youTubeList
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: store.homeScreenButtonActive
                 });
             }
                 case GlobalStoreActionType.UPDATE_YOUTUBE_LIST: {
@@ -349,10 +380,32 @@ function GlobalStoreContextProvider(props) {
                         errorMessage: store.errorMessage,
                         currentYouTubeVideoView: store.currentYouTubeVideoView,
                         playlistObj: store.playlistObj,
-                        youTubeList: payload
+                        youTubeList: payload,
+                        youTubeSong: payload.songs[store.currentYouTubeSongIndex[0]],
+                        homeScreenButtonActive: store.homeScreenButtonActive
 
                     });
             }
+            case GlobalStoreActionType.CHANGE_HOME_SCREEN_BUTTON_ACTIVE: {
+                return setStore({
+                    currentModal : store.currentModal,
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    currentSongIndex: store.currentSongIndex,
+                    currentSong: store.currentSong,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.listNameActive,
+                    listIdMarkedForDeletion: store.listIdMarkedForDeletion,
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    errorMessage: store.errorMessage,
+                    currentYouTubeVideoView: store.currentYouTubeVideoView,
+                    playlistObj: store.playlistObj,
+                    youTubeList: store.youTubeList,
+                    youTubeSong: store.youTubeSong,
+                    homeScreenButtonActive: payload
+
+                });
+        }
             default:
                 return store;
         }
@@ -477,7 +530,9 @@ function GlobalStoreContextProvider(props) {
             const response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
+                store.handleSort(pairsArray);
                 console.log("fdslakj", pairsArray);
+                
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: pairsArray
@@ -681,6 +736,7 @@ function GlobalStoreContextProvider(props) {
     }
     // THIS FUNCTION UPDATES THE TEXT IN THE ITEM AT index TO text
     store.updateSong = async function(index, songData, list) {
+        console.log("fadsfghgf",index);
         let song = list.songs[index];
         song.title = songData.title;
         song.artist = songData.artist;
@@ -833,12 +889,20 @@ function GlobalStoreContextProvider(props) {
             payload: playlistObj
         })
     }
-    store.updateYouTubeList = function (list){
+    store.updateYouTubeList = async function (list){
+        store.currentYouTubeSongIndex[0] = 0;
+        list.listens ++;
+        await api.updatePlaylistById(list._id, list);
         storeReducer({
             type: GlobalStoreActionType.UPDATE_YOUTUBE_LIST,
             payload: list
         })
     }
+
+    // store.incListens = function (list){
+    //     list.listens ++;
+    //     store.updateCurrentList(list);
+    // }
 
     // store.addKeyPress = function() {
     //     function KeyPress(store,evtobj) {
@@ -885,6 +949,105 @@ function GlobalStoreContextProvider(props) {
         }
         
     }
+    store.currentYouTubeSongIndex = currentYouTubeSongIndex;
+
+    store.updateYouTubeSong = () => {
+        console.log(store.currentYouTubeSongIndex[0]);
+        store.youTubeSong = store.youTubeList.songs[store.currentYouTubeSongIndex[0]];
+        store.update();
+    };
+
+    store.changeHomeScreenButtonActive = (num) => {
+        storeReducer({
+            type: GlobalStoreActionType.CHANGE_HOME_SCREEN_BUTTON_ACTIVE,
+            payload: num
+        })
+    }
+
+    store.sortOption = sortOption;
+
+    store.setSortOption = (option) => {
+        store.sortOption[0] = option;
+        store.loadIdNamePairs();
+    }
+
+    store.handleSort = (pairsArray) => {
+        switch (store.sortOption[0]){
+            case "Name":
+                console.log(pairsArray);
+                pairsArray.sort((a,b)=>{
+                    return a.list.name.localeCompare(b.list.name);
+                })
+                console.log(pairsArray);
+                return store.update();
+            case "Date":
+                console.log(pairsArray);
+                
+                pairsArray.sort((a,b)=>{
+                    if (a.list.publishedDate === undefined){
+                        a.list.publishedDate = "12/30/9999";
+                    }
+                    if (b.list.publishedDate === undefined){
+                        b.list.publishedDate = "12/30/9999";
+                    }
+                    return Date.parse(a.list.publishedDate) - Date.parse(b.list.publishedDate);
+                })
+                
+                console.log(pairsArray);
+                return store.update();
+
+            case "Listens":
+                console.log(pairsArray);
+                
+                pairsArray.sort((a,b)=>{
+                    if (a.list.listens === undefined){
+                        a.list.listens = -1
+                    }
+                    if (b.list.listens === undefined){
+                        b.list.listens = -1
+                    }
+                    return -(a.list.listens - b.list.listens);
+                })
+                
+                console.log(pairsArray);
+                return store.update();
+
+            case "Likes":
+                console.log(pairsArray);
+                
+                pairsArray.sort((a,b)=>{
+                    if (a.list.likes === undefined){
+                        a.list.likes = -1
+                    }
+                    if (b.list.likes === undefined){
+                        b.list.likes = -1
+                    }
+                    return -(a.list.likes - b.list.likes);
+                })
+                
+                console.log(pairsArray);
+                return store.update();
+            case "Dislikes":
+                console.log(pairsArray);
+                
+                pairsArray.sort((a,b)=>{
+                    if (a.list.dislikes === undefined){
+                        a.list.dislikes = -1
+                    }
+                    if (b.list.dislikes === undefined){
+                        b.list.dislikes = -1
+                    }
+                    return -(a.list.dislikes - b.list.dislikes);
+                })
+                
+                console.log(pairsArray);
+                return store.update();
+            default:
+                return;
+
+        }
+    }
+    
 
 
     return (

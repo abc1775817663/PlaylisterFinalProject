@@ -5,6 +5,10 @@ import Button from "@mui/material/Button";
 import { Grid } from "@mui/material";
 import { Box } from "@mui/material";
 import { useState } from "react";
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import CommentCard from "./CommentCard";
+import AuthContext from "../auth";
 
 
 export default function YouTubePlayerExample() {
@@ -13,19 +17,14 @@ export default function YouTubePlayerExample() {
   // DEMONSTRATES HOW TO IMPLEMENT A PLAYLIST THAT MOVES
   // FROM ONE SONG TO THE NEXT
   const {store} = useContext(GlobalStoreContext);
-  const {currentSong, setCurrentSong} = useState(0);
+  const {auth} = useContext(AuthContext);
+
+
   let youTubeList = store.youTubeList;
-  if (!youTubeList || youTubeList.songs.length < 1){
+  if (!youTubeList || !store.youTubeSong){
     return "";
   }
     
-  // THIS HAS THE YOUTUBE IDS FOR THE SONGS IN OUR PLAYLIST
-  let playlist = [];
-  for (var songIdx in youTubeList.songs){
-    playlist.push(youTubeList.songs[songIdx]);
-  }
-  console.log("playlist", playlist)
-
   // THIS IS THE INDEX OF THE SONG CURRENTLY IN USE IN THE PLAYLIST
   
 
@@ -41,20 +40,59 @@ export default function YouTubePlayerExample() {
   // THIS FUNCTION LOADS THE CURRENT SONG INTO
   // THE PLAYER AND PLAYS IT
   function loadAndPlayCurrentSong(player) {
-    let song = playlist[currentSong?currentSong:0].youTubeId;
+    let song = store.youTubeList.songs[store.currentYouTubeSongIndex[0]].youTubeId;
     player.loadVideoById(song);
     player.playVideo();
   }
 
   // THIS FUNCTION INCREMENTS THE PLAYLIST SONG TO THE NEXT ONE
   function incSong() {
-    setCurrentSong(currentSong => (currentSong + 1) % playlist.length);
+    store.currentYouTubeSongIndex[0]++;
+    if (store.currentYouTubeSongIndex[0] === store.youTubeList.songs.length){
+      store.currentYouTubeSongIndex[0] = 0;
+    };
+    console.log("next song", store.currentYouTubeSongIndex[0])
+    console.log(store.youTubeList.songs.length)
+    console.log(store.youTubeList.songs.length)
+    store.updateYouTubeSong();
+  }
+
+  function decSong() {
+    if (store.currentYouTubeSongIndex[0] !== 0){
+      store.currentYouTubeSongIndex[0] = (store.currentYouTubeSongIndex[0] - 1);
+    }
+    else{
+      store.currentYouTubeSongIndex[0] = store.youTubeList.songs.length-1;
+    }
+
+    store.updateYouTubeSong();    
   }
 
   function onPlayerReady(event) {
     loadAndPlayCurrentSong(event.target);
     event.target.playVideo();
   }
+
+  let commentDraft = "";
+  let keyPress = async (event) => {
+    await setTimeout(()=>{
+      commentDraft = event.target.value;
+      console.log(event);
+      console.log(event.target.value)
+      console.log(commentDraft);
+    }, 100)
+    
+  }
+  let handleSubmit = (event) => {
+    if (!store.youTubeSong.comments){
+      store.youTubeSong.comment = [];
+    }
+    store.youTubeSong.comments.push({user:auth.user.userName, content:`${commentDraft}`})
+    // store.youTubeSong.comments += commentDraft;
+    console.log(store.youTubeSong);
+    store.updateCurrentList(store.youTubeList);
+  }
+  
 
   // THIS IS OUR EVENT HANDLER FOR WHEN THE YOUTUBE PLAYER'S STATE
   // CHANGES. NOTE THAT playerStatus WILL HAVE A DIFFERENT INTEGER
@@ -91,6 +129,154 @@ export default function YouTubePlayerExample() {
        console.log("current view", store.currentYouTubeVideoView);
   }
 
+  let generateYouTubeView = () => {
+    return (
+      <div>
+      <YouTube
+      videoId={store.youTubeSong.youTubeId}
+      opts={playerOptions}
+      onReady={onPlayerReady}
+      onStateChange={onPlayerStateChange}
+      />
+
+        <Grid container>
+        <Grid item xs={2}/>
+          <Grid item xs={3}>
+         <Button onClick={decSong} paddingRight={"50%"}>
+         <SkipPreviousIcon sx={{
+          fontSize: 40, 
+          color: "#736e62"}}
+          />
+          </Button>
+          </Grid>
+
+          <Grid item xs={4}>
+          <Button onClick={incSong}>
+          <SkipNextIcon sx={{
+          fontSize: 40, 
+          color: "#736e62"}}
+          />
+        
+          </Button>
+          </Grid>
+        </Grid>
+
+
+
+      <Box sx={{
+        width: "340px",
+        backgroundColor: "lightgray",
+        borderRadius: "20px",
+      }}>
+        <Grid container rowGap="5px">
+          <Grid item xs={12} sx={{size: 30,paddingLeft:"36%"}}>
+            
+            <strong>Now Playing</strong> 
+            
+          </Grid>
+
+          <Grid item xs={3}/>
+          <Grid item xs={3}>
+            
+            Playlist:
+            
+          </Grid>
+          <Grid item xs={5}>
+            
+            {store.youTubeList.name}
+            
+          </Grid>
+          
+          <Grid item xs={3}/>
+          <Grid item xs={3}>
+            
+            Title:
+            
+          </Grid>
+          <Grid item xs={5}>
+            
+          {store.youTubeSong.title}
+            
+          </Grid>
+          <Grid item xs={3}/>
+          <Grid item xs={3}>
+            
+            Artist: 
+            
+          </Grid>
+          <Grid item xs={5}>
+            
+          {store.youTubeSong.artist}
+            
+          </Grid>
+        </Grid>
+      </Box>
+  </div>)
+  }
+
+  let generateCommentView = () =>{
+    console.log("Comment card",store.youTubeSong.comments ? "t": "f")
+    
+    return (
+      <div>
+      <Box
+      sx={{
+        backgroundColor:"lightgray",
+        height: "320px",
+        width: "90%",
+        overflow: "scroll"
+      }}>
+        {store.youTubeSong.comments ? 
+        generateCommentCard()
+        :""
+        }
+        
+
+      </Box>
+      
+
+      
+      <input id="commentInput" type="text" 
+      placeholder="Add Comment" 
+      onKeyPress={keyPress}
+        style={{
+                verticalAlign: "top",
+                width: "70%"
+            }}/>
+      <Button
+      variant="contained"
+      onClick={handleSubmit}
+      id="comment-input">
+        Submit
+      </Button>
+      
+
+      </div>
+    );
+  }
+
+  let generateCommentCard = () => {
+    let res = [];
+
+    for (var i in store.youTubeSong.comments){
+      let comment = store.youTubeSong.comments[i];
+
+      let c = (
+        <CommentCard
+            user = {comment.user}
+            comment = {comment.content}
+          />
+      )
+      res.push(c)
+    }
+    return res;
+  
+      
+
+
+  }
+    
+  
   return (
     <div>
         <span>
@@ -129,63 +315,10 @@ export default function YouTubePlayerExample() {
             Comments
         </Button>
         </span>
-        <YouTube
-        videoId={currentSong?playlist[currentSong].youTubeId:playlist[0].youTubeId}
-        opts={playerOptions}
-        onReady={onPlayerReady}
-        onStateChange={onPlayerStateChange}
-        />
 
-
-        <Box>
-          <Grid container rowGap="5px">
-            <Grid item xs={12} sx={{size: 30,paddingLeft:"28%"}}>
-              
-              Now Playing
-              
-            </Grid>
-            <Grid item xs={3}>
-              
-              Playlist:
-              
-            </Grid>
-            <Grid item xs={9}>
-              
-              {store.youTubeList.name}
-              
-            </Grid>
-            <Grid item xs={3}>
-              
-              Song #: 
-              
-            </Grid>
-            <Grid item xs={9}>
-              
-              {currentSong?currentSong+1:1}
-              
-            </Grid>
-            <Grid item xs={3}>
-              
-              Title:
-              
-            </Grid>
-            <Grid item xs={9}>
-              
-            {playlist[currentSong?currentSong:0].title}
-              
-            </Grid>
-            <Grid item xs={3}>
-              
-              Artist: 
-              
-            </Grid>
-            <Grid item xs={9}>
-              
-            {playlist[currentSong?currentSong:0].artist}
-              
-            </Grid>
-          </Grid>
-        </Box>
-    </div>
+        {store.currentYouTubeVideoView?
+        generateYouTubeView():
+        generateCommentView()}
+</div>
   )
 }

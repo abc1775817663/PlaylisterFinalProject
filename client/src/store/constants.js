@@ -1,3 +1,4 @@
 let listLike = {};
-let currentSongIndex = 0;
-export {listLike, currentSongIndex}
+let currentYouTubeSongIndex = [0];
+let sortOption = ["None"]
+export {listLike, currentYouTubeSongIndex, sortOption}

@@ -32,6 +32,7 @@ const HomeScreen = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+    let Button1 = () =>{
     let listCard = "";
     if (store) {
         listCard = 
@@ -105,6 +106,27 @@ const HomeScreen = () => {
             
             
         </div>)
+    }
+
+    let Button2 = () => {
+
+    }
+
+    let Button3 = () => {
+
+    }
+    return (
+        <div>
+        {store.homeScreenButtonActive === 1?
+        Button1()
+        :
+        store.homeScreenButtonActive === 2?
+        Button2()
+        :
+        Button3()
+        }
+        </div>
+    )
 }
 
 export default HomeScreen;

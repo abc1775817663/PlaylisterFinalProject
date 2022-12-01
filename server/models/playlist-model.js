@@ -13,7 +13,8 @@ const playlistSchema = new Schema(
         songs: { type: [{
             title: String,
             artist: String,
-            youTubeId: String
+            youTubeId: String,
+            comments: [{user:String, content:String}]
         }], required: true },
         userName: { type: String, required: true },
         published: {type: Boolean, required: true},

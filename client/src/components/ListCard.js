@@ -132,7 +132,9 @@ function ListCard(props) {
         return store.youTubeList._id === idNamePair.list._id;
     }
     let handleClick = () => {
+        // store.incListens(idNamePair.list);
         store.updateYouTubeList(idNamePair.list);
+        
     }
 
     let updateDisliked = async() => {
@@ -165,7 +167,8 @@ function ListCard(props) {
 
     
 
-    let handleLike = async() => {
+    let handleLike = async(event) => {
+        event.stopPropagation();
         let playlist = idNamePair.list;
         if (!store.getListLike(idNamePair._id, "liked")){
             if (playlist.likes > 0){
@@ -210,7 +213,8 @@ function ListCard(props) {
         await store.loadIdNamePairs();
         
     }
-    let handleDislike = async() => {
+    let handleDislike = async(event) => {
+        event.stopPropagation();
         let playlist = idNamePair.list;
         if (!store.getListLike(idNamePair._id, "disliked")){
             if (playlist.dislikes > 0){
