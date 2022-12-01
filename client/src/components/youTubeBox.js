@@ -238,7 +238,7 @@ export default function YouTubePlayerExample() {
       
       <input id="commentInput" type="text" 
       placeholder="Add Comment" 
-      onKeyPress={keyPress}
+      onKeyDown={keyPress}
         style={{
                 verticalAlign: "top",
                 width: "70%"

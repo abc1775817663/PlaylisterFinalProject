@@ -32,13 +32,14 @@ const HomeScreen = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
-    let Button1 = () =>{
+    let content = (pairs) =>{
+        console.log(store.homeScreenButtonActive);
     let listCard = "";
     if (store) {
         listCard = 
             <List sx={{ width: '90%', left: '5%'}}>
             {
-                store.idNamePairs.map((pair) => (
+                pairs.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
@@ -100,29 +101,17 @@ const HomeScreen = () => {
             <MUIRemoveSongModal/>
             {Object.keys(store.currentSong).length !== 0? <MUIEditSongModal/> : ""}
             
-
-            
-            
         </div>)
     }
 
-    let Button2 = () => {
-
-    }
-
-    let Button3 = () => {
-
-    }
+   
     return (
         <div>
             <HomeScreenToolBar/>
         {store.homeScreenButtonActive === 1?
-        Button1()
+        content(store.idNamePairs)
         :
-        store.homeScreenButtonActive === 2?
-        Button2()
-        :
-        Button3()
+        content(store.searchedListPairs)
         }
         </div>
     )
