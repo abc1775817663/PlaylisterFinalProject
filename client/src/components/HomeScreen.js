@@ -54,8 +54,6 @@ const HomeScreen = () => {
                 
             </div>
 
-            <HomeScreenToolBar/>
-
             
             <Grid container spacing={1} height={"100%"}>
                 <Grid item xs={7}>
@@ -117,6 +115,7 @@ const HomeScreen = () => {
     }
     return (
         <div>
+            <HomeScreenToolBar/>
         {store.homeScreenButtonActive === 1?
         Button1()
         :

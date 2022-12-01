@@ -964,12 +964,18 @@ function GlobalStoreContextProvider(props) {
         })
     }
 
+    store.getSearchedListPairs = async (searchTerm) => {
+        let searchedList = await api.getSearchedPlaylistPairs(searchTerm);
+        console.log(searchedList);
+    }
+
     store.sortOption = sortOption;
 
     store.setSortOption = (option) => {
         store.sortOption[0] = option;
         store.loadIdNamePairs();
     }
+    
 
     store.handleSort = (pairsArray) => {
         switch (store.sortOption[0]){

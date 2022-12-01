@@ -58,6 +58,7 @@ let searchContent = "";
         console.log(event);
         console.log(event.target.value)
         console.log(searchContent);
+        store.getSearchedListPairs(event.target.value)
     }, 100)
   }
 
