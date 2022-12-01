@@ -742,3 +742,12 @@ span {
   }
 }
 
+#listCardInfoDiv {
+  display: grid;
+  /* row-gap: 3px; */
+  /* background-color: black; */
+}
+
+
+
+

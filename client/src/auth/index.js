@@ -78,7 +78,7 @@ function AuthContextProvider(props) {
             type: AuthActionType.CONTINUE_AS_GUEST    
         })
     }
-    
+
     auth.getLoggedIn = async function () {
         const response = await api.getLoggedIn();
         if (response.status === 200) {
@@ -165,6 +165,7 @@ function AuthContextProvider(props) {
         </AuthContext.Provider>
     );
 }
+
 
 export default AuthContext;
 export { AuthContextProvider };

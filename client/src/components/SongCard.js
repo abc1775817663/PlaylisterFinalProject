@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+import MUIEditSongModal from './MUIEditSongModal';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ draggedTo, setDraggedTo ] = useState(0);
-    const { song, index } = props;
+    const { song, index, playlistId } = props;
 
     function handleDragStart(event) {
         event.dataTransfer.setData("song", index);
@@ -31,15 +32,16 @@ function SongCard(props) {
         setDraggedTo(false);
 
         // UPDATE THE LIST
-        store.addMoveSongTransaction(sourceIndex, targetIndex);
+        store.addMoveSongTransaction(sourceIndex, targetIndex, playlistId);
     }
     function handleRemoveSong(event) {
-        store.showRemoveSongModal(index, song);
+        console.log(12139, index, song)
+        store.showRemoveSongModal(index, song, playlistId);
     }
     function handleClick(event) {
         // DOUBLE CLICK IS FOR SONG EDITING
         if (event.detail === 2) {
-            store.showEditSongModal(index, song);
+            store.showEditSongModal(index, song, playlistId);
         }
     }
 
@@ -56,22 +58,26 @@ function SongCard(props) {
             onDrop={handleDrop}
             draggable="true"
             onClick={handleClick}
+            style={{fontSize: 12}}
         >
             {index + 1}.
             <a
                 id={'song-' + index + '-link'}
-                className="song-link"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
+                className="song-link">
+
                 {song.title} by {song.artist}
             </a>
             <input
                 type="button"
                 id={"remove-song-" + index}
                 className="list-card-button"
-                value={"\u2715"}
+                value={"X"}
                 onClick={handleRemoveSong}
-                style={{height: 25, width:25, fontSize:15}}
+                
+                style={{height: 20, width:20, fontSize:10, textAlign:"center"}}
             />
+
+            
         </div>
     );
 }

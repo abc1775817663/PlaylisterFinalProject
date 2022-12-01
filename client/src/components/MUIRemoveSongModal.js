@@ -32,6 +32,7 @@ export default function MUIRemoveSongModal() {
         modalClass += " is-visible";
     }
     let songTitle = "";
+    console.log(12138, store.currentSong);
     if (store.currentSong) {
         songTitle = store.currentSong.title;
     }

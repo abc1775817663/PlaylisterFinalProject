@@ -2,18 +2,32 @@ import GlobalStoreContext from "../store";
 import React, { useContext } from "react";
 import YouTube from "react-youtube";
 import Button from "@mui/material/Button";
+import { Grid } from "@mui/material";
+import { Box } from "@mui/material";
+import { useState } from "react";
+
 
 export default function YouTubePlayerExample() {
   // THIS EXAMPLE DEMONSTRATES HOW TO DYNAMICALLY MAKE A
   // YOUTUBE PLAYER AND EMBED IT IN YOUR SITE. IT ALSO
   // DEMONSTRATES HOW TO IMPLEMENT A PLAYLIST THAT MOVES
   // FROM ONE SONG TO THE NEXT
-
+  const {store} = useContext(GlobalStoreContext);
+  const {currentSong, setCurrentSong} = useState(0);
+  let youTubeList = store.youTubeList;
+  if (!youTubeList || youTubeList.songs.length < 1){
+    return "";
+  }
+    
   // THIS HAS THE YOUTUBE IDS FOR THE SONGS IN OUR PLAYLIST
-  let playlist = ["mqmxkGjow1A", "8RbXIMZmVv8", "8UbNbor3OqQ"];
+  let playlist = [];
+  for (var songIdx in youTubeList.songs){
+    playlist.push(youTubeList.songs[songIdx]);
+  }
+  console.log("playlist", playlist)
 
   // THIS IS THE INDEX OF THE SONG CURRENTLY IN USE IN THE PLAYLIST
-  let currentSong = 0;
+  
 
   const playerOptions = {
     height: "210",
@@ -27,15 +41,14 @@ export default function YouTubePlayerExample() {
   // THIS FUNCTION LOADS THE CURRENT SONG INTO
   // THE PLAYER AND PLAYS IT
   function loadAndPlayCurrentSong(player) {
-    let song = playlist[currentSong];
+    let song = playlist[currentSong?currentSong:0].youTubeId;
     player.loadVideoById(song);
     player.playVideo();
   }
 
   // THIS FUNCTION INCREMENTS THE PLAYLIST SONG TO THE NEXT ONE
   function incSong() {
-    currentSong++;
-    currentSong = currentSong % playlist.length;
+    setCurrentSong(currentSong => (currentSong + 1) % playlist.length);
   }
 
   function onPlayerReady(event) {
@@ -77,7 +90,7 @@ export default function YouTubePlayerExample() {
        store.changeYouTubeView();
        console.log("current view", store.currentYouTubeVideoView);
   }
-  const { store } = useContext(GlobalStoreContext);
+
   return (
     <div>
         <span>
@@ -117,10 +130,62 @@ export default function YouTubePlayerExample() {
         </Button>
         </span>
         <YouTube
-        videoId={playlist[currentSong]}
+        videoId={currentSong?playlist[currentSong].youTubeId:playlist[0].youTubeId}
         opts={playerOptions}
         onReady={onPlayerReady}
         onStateChange={onPlayerStateChange}
         />
-    </div>)
+
+
+        <Box>
+          <Grid container rowGap="5px">
+            <Grid item xs={12} sx={{size: 30,paddingLeft:"28%"}}>
+              
+              Now Playing
+              
+            </Grid>
+            <Grid item xs={3}>
+              
+              Playlist:
+              
+            </Grid>
+            <Grid item xs={9}>
+              
+              {store.youTubeList.name}
+              
+            </Grid>
+            <Grid item xs={3}>
+              
+              Song #: 
+              
+            </Grid>
+            <Grid item xs={9}>
+              
+              {currentSong?currentSong+1:1}
+              
+            </Grid>
+            <Grid item xs={3}>
+              
+              Title:
+              
+            </Grid>
+            <Grid item xs={9}>
+              
+            {playlist[currentSong?currentSong:0].title}
+              
+            </Grid>
+            <Grid item xs={3}>
+              
+              Artist: 
+              
+            </Grid>
+            <Grid item xs={9}>
+              
+            {playlist[currentSong?currentSong:0].artist}
+              
+            </Grid>
+          </Grid>
+        </Box>
+    </div>
+  )
 }

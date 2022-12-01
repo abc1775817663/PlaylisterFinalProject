@@ -15,7 +15,7 @@ function Statusbar() {
     return (
         <div id="playlister-statusbar"
         style={{textAlign:"center"}}>
-            <Typography variant="h4">{text}</Typography>
+            <Typography variant="h4">{}</Typography>
         </div>
     );
 }

@@ -12,6 +12,10 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import YouTubePlayerExample from './youTubeBox';
 import HomeScreenToolBar from './HomeScreenToolBar';
+import MUIRemoveSongModal from './MUIRemoveSongModal';
+import MUIEditSongModal from './MUIEditSongModal';
+
+
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -24,13 +28,14 @@ const HomeScreen = () => {
         store.loadIdNamePairs();
     }, []);
 
+    
     function handleCreateNewList() {
         store.createNewList();
     }
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            <List sx={{ width: '90%', left: '5%'}}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
@@ -64,10 +69,10 @@ const HomeScreen = () => {
                 </div>
                 </Grid>
                 <Grid item xs={5}>
-                    <div>
+                    <Box>
                         
                         <YouTubePlayerExample />
-                    </div>
+                    </Box>
                 </Grid>
             </Grid>
 
@@ -93,7 +98,12 @@ const HomeScreen = () => {
                 </span>
             </div>
             
+            <MUIRemoveSongModal/>
+            {Object.keys(store.currentSong).length !== 0? <MUIEditSongModal/> : ""}
+            
 
+            
+            
         </div>)
 }
 

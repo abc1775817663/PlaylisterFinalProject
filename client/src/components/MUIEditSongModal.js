@@ -18,9 +18,6 @@ import Modal from '@mui/material/Modal';
 
 export default function MUIEditSongModal() {
     const { store } = useContext(GlobalStoreContext);
-    // const [ title, setTitle ] = useState(store.currentSong.title);
-    // const [ artist, setArtist ] = useState(store.currentSong.artist);
-    // const [ youTubeId, setYouTubeId ] = useState(store.currentSong.youTubeId);
 
     let localSongInfo = {
         title: store.currentSong.title,
@@ -35,6 +32,7 @@ export default function MUIEditSongModal() {
             artist:  localSongInfo.artist,
             youTubeId: localSongInfo.youTubeId
         };
+        store.currentSong = {};
         store.addUpdateSongTransaction(store.currentSongIndex, newSongData);        
     }
 

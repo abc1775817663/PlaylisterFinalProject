@@ -5,6 +5,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/HighlightOff';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import PublishIcon from '@mui/icons-material/Publish';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
+
 
 /*
     This toolbar is a functional React component that
@@ -12,26 +18,66 @@ import CloseIcon from '@mui/icons-material/HighlightOff';
     
     @author McKilla Gorilla
 */
-function EditToolbar() {
+function EditToolbar(props) {
     const { store } = useContext(GlobalStoreContext);
+    const {playlistId, playlist} = props;
 
     function handleAddNewSong() {
-        store.addNewSong();
+        store.addNewSong(playlist);
     }
     function handleUndo() {
-        store.undo();
+        store.undo(playlist);
     }
     function handleRedo() {
-        store.redo();
+        store.redo(playlist);
     }
-    function handleClose() {
-        //  window.location.href = "/";
-        store.closeCurrentList();
+    // function handleClose() {
+    //     //  window.location.href = "/";
+    //     store.closeCurrentList();
+    // }
+    function handleDelete() {
+        store.markListForDeletion(playlistId);
+    }
+    async function handlePublish(){
+
+        playlist.published = true;
+        
+        let d = new Date();
+        playlist.publishedDate = d.getMonth()+1+"/"+d.getDate()+"/"+d.getFullYear();
+
+        playlist.likes = 0;
+        playlist.dislikes = 0;
+        playlist.likedUsers = "";
+        playlist.dislikedUsers = "";
+        playlist.comments = "";
+        playlist.listens = 0;
+        
+        await store.updateCurrentList(playlist);
+        await store.loadIdNamePairs();
+    }
+    function handleDuplicate(){
+        store.duplicateList(playlistId);
     }
 
     let modalOpen = store.isModalOpen();
     return (
-        <div id="edit-toolbar">
+        <div id="edit-toolbar" >
+            <Button 
+                disabled={!store.canUndo(playlistId) || modalOpen}
+                id='undo-button'
+                onClick={handleUndo}
+                variant="contained">
+                    <UndoIcon />
+            </Button>
+
+            <Button 
+                disabled={!store.canRedo(playlistId) || modalOpen}
+                id='redo-button'
+                onClick={handleRedo}
+                variant="contained">
+                    <RedoIcon />
+            </Button>
+
             <Button
                 disabled={!store.canAddNewSong() || modalOpen}
                 id='add-song-button'
@@ -39,27 +85,30 @@ function EditToolbar() {
                 variant="contained">
                 <AddIcon />
             </Button>
-            <Button 
-                disabled={!store.canUndo() || modalOpen}
-                id='undo-button'
-                onClick={handleUndo}
-                variant="contained">
-                    <UndoIcon />
+
+            <Button onClick={handleDelete} variant="contained">
+                <DeleteIcon style={{}} />
+                </Button>
+            
+            <Button onClick={handleDuplicate} variant="contained">
+            <ContentCopyIcon style={{}}/>
+            
             </Button>
-            <Button 
-                disabled={!store.canRedo() || modalOpen}
-                id='redo-button'
-                onClick={handleRedo}
-                variant="contained">
-                    <RedoIcon />
+
+            <Button onClick={handlePublish} variant="contained">
+            <PublishIcon style={{}}/>
+            publish
             </Button>
-            <Button 
+            
+            
+
+            {/* <Button 
                 disabled={!store.canClose() || modalOpen}
                 id='close-button'
                 onClick={handleClose}
                 variant="contained">
                     <CloseIcon />
-            </Button>
+            </Button> */}
         </div>
     )
 }

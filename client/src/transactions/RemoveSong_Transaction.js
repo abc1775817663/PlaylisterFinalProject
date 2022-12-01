@@ -10,18 +10,19 @@ import jsTPS_Transaction from "../common/jsTPS.js"
  * @author ?
  */
 export default class RemoveSong_Transaction extends jsTPS_Transaction {
-    constructor(initStore, initIndex, initSong) {
+    constructor(initStore, initIndex, initSong, initList) {
         super();
         this.store = initStore;
         this.index = initIndex;
         this.song = initSong;
+        this.list = initList;
     }
 
     doTransaction() {
-        this.store.removeSong(this.index);
+        this.store.removeSong(this.index, this.list);
     }
     
     undoTransaction() {
-        this.store.createSong(this.index, this.song);
+        this.store.createSong(this.index, this.song, this.list);
     }
 }
