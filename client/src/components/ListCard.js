@@ -95,7 +95,7 @@ function ListCard(props) {
     async function handleExpand(event){
         event.stopPropagation();
         setExpand(true);
-        store.updatePlaylistObj(idNamePair._id);
+        store.updatePlaylistObj(idNamePair.list);
     }
 
     async function handleExpandLess(event){
@@ -116,7 +116,7 @@ function ListCard(props) {
         console.log(3123123, playlist.likedUsers)
         let likedUsers = playlist.likedUsers.split(",")
         for (let idx in likedUsers){
-            if (auth.user.userName == likedUsers[idx]){
+            if (auth.user && auth.user.userName === likedUsers[idx]){
                 console.log("liked")
                 store.updateListLike(idNamePair._id, "liked", true)
                 return;
@@ -127,13 +127,17 @@ function ListCard(props) {
     }
     let isYouTubeList = ()=> { 
         if (!store.youTubeList){
+            console.log("store youTube list",store.youTubeList)
             return false;
         }
+        console.log("store youTube list", store.youTubeList)
         return store.youTubeList._id === idNamePair.list._id;
     }
-    let handleClick = () => {
+    let handleClick = async () => {
         // store.incListens(idNamePair.list);
-        store.updateYouTubeList(idNamePair.list);
+        
+        await store.updateYouTubeList(idNamePair.list);
+        console.log(878970,idNamePair.list);
         
     }
 
@@ -150,7 +154,7 @@ function ListCard(props) {
         let dislikedUsers = playlist.dislikedUsers.split(",")
         console.log(3123124, dislikedUsers)
         for (let idx in dislikedUsers){
-            if (auth.user.userName == dislikedUsers[idx]){
+            if (auth.user && auth.user.userName === dislikedUsers[idx]){
                 store.updateListLike(idNamePair._id, "disliked", true)
                 return;
             }
@@ -296,7 +300,7 @@ function ListCard(props) {
             <Grid item xs={2}>
             <Box sx={{ p: 1}}>
                 
-                    <IconButton onClick={handleLike} aria-label='edit'>
+                    <IconButton onClick={handleLike} disabled={store.isGuest()} aria-label='edit'>
                     {
                         
                         !store.getListLike(idNamePair._id, "liked")?
@@ -319,7 +323,7 @@ function ListCard(props) {
             <Grid item xs={2}>
             <Box sx={{ p: 1}}>
                 
-                    <IconButton onClick={handleDislike} aria-label='edit'>
+                    <IconButton onClick={handleDislike} disabled={store.isGuest()} aria-label='edit'>
                     {
                         !store.getListLike(idNamePair._id, "disliked")?
                         <ThumbDownOffAltIcon style={{fontSize:'25pt'}} />
@@ -340,7 +344,7 @@ function ListCard(props) {
         <Grid item xs={1}>
         <Box sx={{ p: 1}}>
             {
-                editActive?
+                editActive || !store.isUserOwnList(idNamePair.list)?
                 ""
                 :
                 <IconButton onClick={handleToggleEdit} aria-label='edit'>

@@ -36,12 +36,12 @@ export default function RegisterScreen() {
             store.setErrorMessage(res);
         }
         // log in 
-        else{
-            auth.loginUser(
-                formData.get('email'),
-                formData.get('password')
-            )
-        }
+        // else{
+        //     auth.loginUser(
+        //         formData.get('email'),
+        //         formData.get('password')
+        //     )
+        // }
     };
 
     return (

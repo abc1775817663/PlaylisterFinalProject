@@ -16,6 +16,9 @@ const SongComponent = (props) => {
     const { store } = useContext(GlobalStoreContext);
     const {playlistId, playlist} = props;
     let visible = !!store.playlistObj[playlistId];
+    if (visible){
+        console.log("hfk90", store.playlistObj[playlistId]);
+    }
     console.log(playlistId, store.playlistObj[playlistId])
     if (visible){
         console.log("rendering song component");

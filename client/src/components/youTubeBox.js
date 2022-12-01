@@ -11,7 +11,7 @@ import CommentCard from "./CommentCard";
 import AuthContext from "../auth";
 
 
-export default function YouTubePlayerExample() {
+export default function YouTubePlayer() {
   // THIS EXAMPLE DEMONSTRATES HOW TO DYNAMICALLY MAKE A
   // YOUTUBE PLAYER AND EMBED IT IN YOUR SITE. IT ALSO
   // DEMONSTRATES HOW TO IMPLEMENT A PLAYLIST THAT MOVES

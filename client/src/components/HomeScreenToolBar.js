@@ -101,16 +101,19 @@ export default function HomeScreenToolBar() {
   return (
     <div style={{ paddingLeft: "30px" }}>
       <IconButton
+        disabled = {store.isGuest()}
         onClick={handleButton1}
         aria-label="home"
         sx={{ bgcolor: store.homeScreenButtonActive === 1 ? "#99ad9a" : "" }}
       >
         <HomeIcon
+          
           sx={{
             fontSize: 42,
             color: "#736e62",
             marginLeft: "15px",
             marginRight: "15px",
+            color: store.isGuest()?"#ced3db":""
           }}
         />
       </IconButton>

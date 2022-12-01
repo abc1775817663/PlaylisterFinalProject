@@ -8,7 +8,7 @@ import RemoveSong_Transaction from "../transactions/RemoveSong_Transaction";
 import UpdateSong_Transaction from "../transactions/UpdateSong_Transaction";
 import AuthContext from "../auth";
 import { listLike, currentYouTubeSongIndex, sortOption } from "./constants";
-/*
+/*:""}
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
     
@@ -717,7 +717,7 @@ function GlobalStoreContextProvider(props) {
     // NOW MAKE IT OFFICIAL
     await store.updateCurrentList(list);
     await store.updateCurrentList(list);
-    await store.updatePlaylistObj(list._id);
+    await store.updatePlaylistObj(list);
     await store.loadIdNamePairs();
   };
   // THIS FUNCTION MOVES A SONG IN THE CURRENT LIST FROM
@@ -744,7 +744,7 @@ function GlobalStoreContextProvider(props) {
 
     await store.updateCurrentList(list);
     await store.updateCurrentList(list);
-    await store.updatePlaylistObj(list._id);
+    await store.updatePlaylistObj(list);
     await store.loadIdNamePairs();
   };
   // THIS FUNCTION REMOVES THE SONG AT THE index LOCATION
@@ -764,7 +764,7 @@ function GlobalStoreContextProvider(props) {
 
     await store.updateCurrentList(list);
     await store.updateCurrentList(list);
-    await store.updatePlaylistObj(list._id);
+    await store.updatePlaylistObj(list);
     await store.loadIdNamePairs();
   };
   // THIS FUNCTION UPDATES THE TEXT IN THE ITEM AT index TO text
@@ -782,7 +782,7 @@ function GlobalStoreContextProvider(props) {
 
     await store.updateCurrentList(list);
     await store.updateCurrentList(list);
-    await store.updatePlaylistObj(list._id);
+    await store.updatePlaylistObj(list);
     await store.loadIdNamePairs();
   };
   // store.addNewSong = () => {
@@ -903,11 +903,9 @@ function GlobalStoreContextProvider(props) {
     });
   };
 
-  store.updatePlaylistObj = async function (id) {
+  store.updatePlaylistObj = async function (playlist) {
     let playlistObj = store.playlistObj;
-    let playlist = await store.getPlaylistById(id);
-    let req2 = await store.getPlaylistById(id);
-    playlistObj[id] = req2;
+    playlistObj[playlist._id] = playlist;
     console.log("updating playlist obj");
     console.log(playlistObj);
     storeReducer({
@@ -933,7 +931,9 @@ function GlobalStoreContextProvider(props) {
   store.updateYouTubeList = async function (list) {
     store.currentYouTubeSongIndex[0] = 0;
     list.listens++;
+    console.log(list);
     await api.updatePlaylistById(list._id, list);
+    console.log(list);
     storeReducer({
       type: GlobalStoreActionType.UPDATE_YOUTUBE_LIST,
       payload: list,
@@ -1025,6 +1025,13 @@ function GlobalStoreContextProvider(props) {
       });
     }
   };
+
+  store.isUserOwnList = (list) => {
+    return auth.user && list.userName === auth.user.userName; 
+  }
+  store.isGuest = () => {
+    return auth.user === null;
+  }
 
   store.sortOption = sortOption;
 
