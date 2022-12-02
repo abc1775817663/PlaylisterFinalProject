@@ -20,23 +20,28 @@ function EditToolbar(props) {
   const { store } = useContext(GlobalStoreContext);
   const { playlistId, playlist } = props;
 
-  function handleAddNewSong() {
+  function handleAddNewSong(event) {
+    event.stopPropagation();
     store.addNewSong(playlist);
   }
-  function handleUndo() {
+  function handleUndo(event) {
+    event.stopPropagation();
     store.undo(playlist);
   }
-  function handleRedo() {
+  function handleRedo(event) {
+    event.stopPropagation();
     store.redo(playlist);
   }
   // function handleClose() {
   //     //  window.location.href = "/";
   //     store.closeCurrentList();
   // }
-  function handleDelete() {
+  function handleDelete(event) {
+    event.stopPropagation();
     store.markListForDeletion(playlistId);
   }
-  async function handlePublish() {
+  async function handlePublish(event) {
+    event.stopPropagation();
     playlist.published = true;
 
     let d = new Date();
@@ -54,13 +59,13 @@ function EditToolbar(props) {
     await store.loadIdNamePairs();
   }
   function handleDuplicate() {
-    store.duplicateList(playlistId);
+    store.duplicateList(playlist);
   }
 
   let modalOpen = store.isModalOpen();
   return (
     <div id="edit-toolbar">
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
           disabled={!store.canUndo(playlistId) || modalOpen}
           id="undo-button"
@@ -72,7 +77,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist)&& !playlist.published ? (
         <Button
           disabled={!store.canRedo(playlistId) || modalOpen}
           id="redo-button"
@@ -84,7 +89,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist)&& !playlist.published ? (
         <Button
           disabled={!store.canAddNewSong() || modalOpen}
           id="add-song-button"
@@ -96,7 +101,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist)&& !playlist.published ? (
         <Button onClick={handleDelete} variant="contained">
           <DeleteIcon style={{}} />
         </Button>
@@ -111,7 +116,7 @@ function EditToolbar(props) {
         ""
       )}
 
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist)&& !playlist.published ? (
         <Button onClick={handlePublish} variant="contained">
           <PublishIcon style={{}} />
           publish

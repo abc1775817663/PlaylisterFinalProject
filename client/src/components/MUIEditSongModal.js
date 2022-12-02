@@ -19,6 +19,8 @@ import Modal from '@mui/material/Modal';
 export default function MUIEditSongModal() {
     const { store } = useContext(GlobalStoreContext);
 
+    console.log(3123123, store.currentSong)
+
     let localSongInfo = {
         title: store.currentSong.title,
         artist: store.currentSong.artist,
