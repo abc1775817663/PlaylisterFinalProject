@@ -95,9 +95,9 @@ function GlobalStoreContextProvider(props) {
       // LIST UPDATE OF ITS NAME
       case GlobalStoreActionType.CHANGE_LIST_NAME: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
-          currentList: CurrentModal.currentList,
+          currentList: store.currentList,
           currentSongIndex: -1,
           currentSong: {},
           newListCounter: store.newListCounter,
@@ -116,7 +116,7 @@ function GlobalStoreContextProvider(props) {
       // STOP EDITING THE CURRENT LIST
       case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
           currentList: null,
           currentSongIndex: -1,
@@ -137,7 +137,7 @@ function GlobalStoreContextProvider(props) {
       // CREATE A NEW LIST
       case GlobalStoreActionType.CREATE_NEW_LIST: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
           currentList: payload,
           currentSongIndex: store.currentSongIndex,
@@ -158,7 +158,7 @@ function GlobalStoreContextProvider(props) {
       // GET ALL THE LISTS SO WE CAN PRESENT THEM
       case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: payload,
           currentList: store.currentList,
           currentSongIndex: -1,
@@ -200,7 +200,7 @@ function GlobalStoreContextProvider(props) {
       // UPDATE A LIST
       case GlobalStoreActionType.SET_CURRENT_LIST: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
           currentList: payload,
           currentSongIndex: -1,
@@ -221,7 +221,7 @@ function GlobalStoreContextProvider(props) {
       // START EDITING A LIST NAME
       case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
         return setStore({
-          currentModal: CurrentModal.NONE,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
           currentList: payload,
           currentSongIndex: -1,
@@ -637,11 +637,7 @@ function GlobalStoreContextProvider(props) {
   // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
   // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
 
-  store.showEditSongModal = async (songIndex, songToEdit, playlistId) => {
-    let res = await api.getPlaylistById(playlistId);
-    let playlist = res.data.playlist;
-
-    store.currentList = playlist;
+  store.showEditSongModal = async (songIndex, songToEdit, playlist) => {
 
     console.log(3123123, store.currentSong);
     console.log(12160, store.currentList);
@@ -651,9 +647,8 @@ function GlobalStoreContextProvider(props) {
       payload: { currentSongIndex: songIndex, currentSong: songToEdit },
     });
   };
-  store.showRemoveSongModal = async (songIndex, songToRemove, playlistId) => {
-    let res = await api.getPlaylistById(playlistId);
-    let playlist = res.data.playlist;
+
+  store.showRemoveSongModal = async (songIndex, songToRemove, playlist) => {
 
     console.log(12141, playlist);
     storeReducer({
@@ -778,6 +773,7 @@ function GlobalStoreContextProvider(props) {
     list.songs.splice(index, 1);
 
     // NOW MAKE IT OFFICIAL
+    console.log(12153250);
     store.currentModal = CurrentModal.NONE;
     // store.updateCurrentList(list);
 
@@ -800,7 +796,7 @@ function GlobalStoreContextProvider(props) {
     console.log(song);
 
     // NOW MAKE IT OFFICIAL
-    console.log(12150, list);
+    console.log(12153250);
     store.currentModal = CurrentModal.NONE;
 
     store.updateCurrentList(list).then(

@@ -33,7 +33,7 @@ const HomeScreen = (props) => {
     store.createNewList();
   }
   let content = (pairs) => {
-    console.log(store.homeScreenButtonActive);
+    console.log(312647,store.homeScreenButtonActive);
     let listCard = "";
     if (store) {
       listCard = (

@@ -35,13 +35,15 @@ function SongCard(props) {
     store.addMoveSongTransaction(sourceIndex, targetIndex, playlistId);
   }
   function handleRemoveSong(event) {
+    event.stopPropagation();
     console.log(12139, index, song);
-    store.showRemoveSongModal(index, song, playlistId);
+    store.showRemoveSongModal(index, song, playlist);
   }
   function handleClick(event) {
+    event.stopPropagation();
     // DOUBLE CLICK IS FOR SONG EDITING
     if (event.detail === 2) {
-      store.showEditSongModal(index, song, playlistId);
+      store.showEditSongModal(index, song, playlist);
     }
   }
 
