@@ -96,7 +96,7 @@ function GlobalStoreContextProvider(props) {
       case GlobalStoreActionType.CHANGE_LIST_NAME: {
         return setStore({
           currentModal: CurrentModal.NONE,
-          idNamePairs: payload.idNamePairs,
+          idNamePairs: store.idNamePairs,
           currentList: CurrentModal.currentList,
           currentSongIndex: -1,
           currentSong: {},
@@ -450,36 +450,21 @@ function GlobalStoreContextProvider(props) {
   // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
   // THIS FUNCTION PROCESSES CHANGING A LIST NAME
-  store.changeListName = function (id, newName) {
+  store.changeListName = async function (id, newName) {
     // GET THE LIST
-    async function asyncChangeListName(id) {
-      let response = await api.getPlaylistById(id);
-      if (response.data.success) {
-        let playlist = response.data.playlist;
-        playlist.name = newName;
-        async function updateList(playlist) {
-          response = await api.updatePlaylistById(playlist._id, playlist);
-          if (response.data.success) {
-            async function getListPairs(playlist) {
-              response = await api.getPlaylistPairs();
-              if (response.data.success) {
-                let pairsArray = response.data.idNamePairs;
-                storeReducer({
-                  type: GlobalStoreActionType.CHANGE_LIST_NAME,
-                  payload: {
-                    idNamePairs: pairsArray,
-                    playlist: playlist,
-                  },
-                });
-              }
-            }
-            getListPairs(playlist);
-          }
-        }
-        updateList(playlist);
-      }
-    }
-    asyncChangeListName(id);
+    let response = await api.getPlaylistById(id);
+    let playlist = response.data.playlist;
+    
+    
+    
+    playlist.name = newName;
+    store.updateCurrentList(playlist).then(
+        store.loadIdNamePairs
+    );
+    
+    
+    
+
   };
 
   store.changeYouTubeView = function () {
@@ -500,8 +485,45 @@ function GlobalStoreContextProvider(props) {
   };
 
   // THIS FUNCTION CREATES A NEW LIST
+  store.getUniquePlaylistName = function(idListPair, name, newList) {
+
+    let num = -1;
+    if (newList){
+        num++;
+    }
+    
+    while (true){
+        let listName = name;
+        if (num >= 0){
+            listName = name + " " + num;
+        }
+        let existed = false;
+        for (const id in idListPair){
+            console.log(idListPair[id].list.name);
+            if (idListPair[id].list.name === listName){
+                
+                existed = true;
+                break;
+            }
+
+        }
+        if (existed){
+            num++;
+        }
+        else{
+            return listName;
+        }
+    }
+  }
+
   store.createNewList = async function () {
-    let newListName = "Untitled" + store.newListCounter;
+    let r = await api.getUserAllPlaylistPairs(auth.user.userName);
+    let idListPair = r.data.idNamePairs;
+
+    console.log(idListPair);
+
+    let newListName = store.getUniquePlaylistName(idListPair, "Untitled", true);
+    console.log("generated name", newListName);
     const response = await api.createPlaylist(
       newListName,
       [],
@@ -520,6 +542,7 @@ function GlobalStoreContextProvider(props) {
       // IF IT'S A VALID LIST THEN LET'S START EDITING IT
       // history.push("/playlist/" + newList._id);
       store.loadIdNamePairs();
+      store.updatePlaylistObj(newList);
     } else {
       console.log("API FAILED TO CREATE A NEW LIST");
     }
@@ -780,10 +803,12 @@ function GlobalStoreContextProvider(props) {
     console.log(12150, list);
     store.currentModal = CurrentModal.NONE;
 
-    await store.updateCurrentList(list);
-    await store.updateCurrentList(list);
-    await store.updatePlaylistObj(list);
-    await store.loadIdNamePairs();
+    store.updateCurrentList(list).then(
+        () => store.updatePlaylistObj(list).then(
+            store.loadIdNamePairs
+        )
+    );
+
   };
   // store.addNewSong = () => {
   //     let playlistSize = store.getPlaylistSize();
@@ -1034,6 +1059,10 @@ function GlobalStoreContextProvider(props) {
   }
 
   store.sortOption = sortOption;
+
+  store.getApi = () => {
+    return api;
+  }
 
   store.setSortOption = (option) => {
     store.sortOption[0] = option;

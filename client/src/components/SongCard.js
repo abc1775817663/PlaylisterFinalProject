@@ -5,7 +5,7 @@ import MUIEditSongModal from "./MUIEditSongModal";
 function SongCard(props) {
   const { store } = useContext(GlobalStoreContext);
   const [draggedTo, setDraggedTo] = useState(0);
-  const { song, index, playlistId } = props;
+  const { song, index, playlistId, playlist } = props;
 
   function handleDragStart(event) {
     event.dataTransfer.setData("song", index);
@@ -56,7 +56,7 @@ function SongCard(props) {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      draggable={store.isUserOwnList()}
+      draggable={store.isUserOwnList(playlist)}
       onClick={handleClick}
       style={{ fontSize: 12 }}
     >
@@ -64,7 +64,7 @@ function SongCard(props) {
       <a id={"song-" + index + "-link"} className="song-link">
         {song.title} by {song.artist}
       </a>
-      {store.isUserOwnList() ? (
+      {store.isUserOwnList(playlist) ? (
         <input
           type="button"
           id={"remove-song-" + index}

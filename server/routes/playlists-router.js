@@ -14,8 +14,10 @@ router.delete('/playlist/:id', auth.verify, PlaylistController.deletePlaylist)
 router.get('/playlist/:id', auth.verify, PlaylistController.getPlaylistById)
 router.get('/playlistpairs', auth.verify, PlaylistController.getPlaylistPairs)
 router.get('/playlists', auth.verify, PlaylistController.getPlaylists)
-router.put('/playlist/:id', auth.verify, PlaylistController.updatePlaylist)
+router.put('/playlist/:id', PlaylistController.updatePlaylist)
 router.get("/searchedplaylistpairs/:searchTerm", PlaylistController.getSearchedPlaylistPairs)
-router.get("/userplaylistpairs/:searchTerm", auth.verify, PlaylistController.getUserPlaylistPairs)
+router.get("/userplaylistpairs/:searchTerm", PlaylistController.getUserPlaylistPairs)
+router.get("/userallplaylistpairs/:searchTerm", PlaylistController.getUserAllPlaylistPairs)
+
 
 module.exports = router

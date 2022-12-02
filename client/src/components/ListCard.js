@@ -79,11 +79,20 @@ function ListCard(props) {
         store.markListForDeletion(id);
     }
 
-    function handleKeyPress(event) {
+    let handleKeyPress = async (event) => {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            let r = await store.getApi().getUserAllPlaylistPairs(auth.user.userName)
+            let idListPair = r.data.idNamePairs;
+            if (text !== store.getUniquePlaylistName(idListPair, text)){
+                store.setErrorMessage(`${text} already exists in your playlists, please change a new name`)
+            }
+            else{
+                let id = event.target.id.substring("list-".length);
+                store.changeListName(id, text);
+                toggleEdit();
+            }
+            
+            
 
         }
         // history.pushState("/")
@@ -413,7 +422,7 @@ function ListCard(props) {
                 className='list-card'
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
-                defaultValue={idNamePair.name}
+                defaultValue={idNamePair.list.name}
                 inputProps={{style: {fontSize: 24}}}
                 InputLabelProps={{style: {fontSize: 24}}}
                 autoFocus

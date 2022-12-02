@@ -24,6 +24,7 @@ export default function HomeScreenToolBar() {
 
   let handleButton1 = () => {
     store.changeHomeScreenButtonActive(1);
+    
   };
   let handleButton2 = () => {
     store.changeHomeScreenButtonActive(2);
@@ -41,10 +42,10 @@ export default function HomeScreenToolBar() {
     setAnchorEl(null);
   };
 
-  let handleSort = (option) => {
-    store.handleSort(option);
-    setAnchorEl(null);
-  };
+//   let handleSort = (option) => {
+//     store.handleSort(option);
+//     setAnchorEl(null);
+//   };
 
   let searchContent = "";
   let keyPress = async (event) => {
@@ -80,19 +81,19 @@ export default function HomeScreenToolBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => store.setSortOption("Name")}>
+      <MenuItem onClick={() => {store.setSortOption("Name");handleMenuClose()}}>
         Name (A-Z)
       </MenuItem>
-      <MenuItem onClick={() => store.setSortOption("Date")}>
+      <MenuItem onClick={() => {store.setSortOption("Date"); handleMenuClose()}}>
         Publish Date (Newest)
       </MenuItem>
-      <MenuItem onClick={() => store.setSortOption("Listens")}>
+      <MenuItem onClick={() => {store.setSortOption("Listens"); handleMenuClose()}}>
         Listens (High - Low)
       </MenuItem>
-      <MenuItem onClick={() => store.setSortOption("Likes")}>
+      <MenuItem onClick={() => {store.setSortOption("Likes"); handleMenuClose()}}>
         Likes (High - Low)
       </MenuItem>
-      <MenuItem onClick={() => store.setSortOption("Dislikes")}>
+      <MenuItem onClick={() => {store.setSortOption("Dislikes"); handleMenuClose()}}>
         Dislikes (High - Low)
       </MenuItem>
     </Menu>

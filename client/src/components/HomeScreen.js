@@ -14,7 +14,7 @@ import YouTubePlayer from "./youTubeBox";
 import HomeScreenToolBar from "./HomeScreenToolBar";
 import MUIRemoveSongModal from "./MUIRemoveSongModal";
 import MUIEditSongModal from "./MUIEditSongModal";
-
+import MUIErrorModal from "./MUIErrorModal";
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -107,6 +107,7 @@ const HomeScreen = (props) => {
       {store.homeScreenButtonActive === 1
         ? content(store.idNamePairs)
         : content(store.searchedListPairs)}
+    <MUIErrorModal/>
     </div>
   );
 };

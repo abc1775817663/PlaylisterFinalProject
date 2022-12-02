@@ -32,6 +32,7 @@ const SongComponent = (props) => {
                             index={index}
                             song={song}
                             playlistId={playlistId}
+                            playlist={playlist}
                         />
                     ))  
                 }
