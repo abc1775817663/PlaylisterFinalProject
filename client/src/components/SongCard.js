@@ -55,7 +55,7 @@ function SongCard(props) {
     return JSON.stringify(song) === JSON.stringify(store.youTubeSong);
   };
 
-  let cardClass = "list-card unselected-list-card";
+  let cardClass = isYouTubeSong()?"list-card selected-list-card":"list-card unselected-list-card";
   return (
     <div
       key={index}
@@ -70,7 +70,7 @@ function SongCard(props) {
       onClick={handleClick}
       style={{
         fontSize: 12,
-        backgroundColor: isYouTubeSong() ? "#dae04c" : "",
+        // backgroundColor: isYouTubeSong() ? "#dae04c" : "",
       }}
     >
       {index + 1}.

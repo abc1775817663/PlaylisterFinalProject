@@ -52,7 +52,7 @@ function EditToolbar(props) {
     // playlist.dislikes = 0;
     playlist.likedUsers = [];
     playlist.dislikedUsers = [];
-    playlist.comments = "";
+    playlist.comments = [];
     playlist.listens = 0;
 
     await store.updateCurrentList(playlist);

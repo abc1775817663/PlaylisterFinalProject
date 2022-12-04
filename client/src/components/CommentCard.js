@@ -19,6 +19,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import AuthContext from "../auth";
+import { LinearProgress } from "@mui/material";
 
 export default function CommentCard(props) {
   const { comment, user } = props;
@@ -31,17 +32,17 @@ export default function CommentCard(props) {
       sx={{
         minHeight: "100px",
         borderRadius: "30px",
-        bgcolor: "#d9d35d",
+        background: 'linear-gradient(#d6b622, #b0961c)',
         wordWrap: "breakWord",
         margin: "20px",
       }}
     >
-      <div style={{ margin: "20px" }}>
-        <em>
+      <div style={{ padding: "20px", fontSize: "25px"}}>
+       <em>
           <strong>{user}:</strong>
         </em>
       </div>
-      <div style={{ margin: "20px" }}>{comment}</div>
+      <div style={{ padding: "20px", paddingTop:"0px" }}>&nbsp;&nbsp;&nbsp;&nbsp;{comment}</div>
     </Box>
   );
 }

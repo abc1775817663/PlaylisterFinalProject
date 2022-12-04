@@ -1085,6 +1085,11 @@ function GlobalStoreContextProvider(props) {
     });
   };
 
+  store.updateYouTubeListFromMem = async() => {
+    let response = await store.getApi().getPlaylistById(store.youTubeList._id);
+    store.youTubeList = response.data.playlist;
+  }
+
   store.handleSort = (pairsArray) => {
     switch (store.sortOption[0]) {
       case "Name":

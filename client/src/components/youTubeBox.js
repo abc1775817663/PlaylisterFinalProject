@@ -82,16 +82,16 @@ export default function YouTubePlayer() {
   let handleSubmit = async (event) => {
     let response = await store.getApi().getPlaylistById(store.youTubeList._id);
     store.youTubeList = response.data.playlist;
-    if (!store.youTubeList.comments) {
-      store.youTubeList.comment = [];
-    }
+    // if (!store.youTubeList.comments) {
+    //   store.youTubeList.comments = [];
+    // }
     store.youTubeList.comments.push({
       user: auth.user.userName,
       content: `${commentDraft}`,
     });
     // store.youTubeSong.comments += commentDraft;
-    console.log(store.youTubeSong);
-    store.updateCurrentList(store.youTubeList);
+    console.log(store.youTubeList);
+    await store.updateCurrentList(store.youTubeList);
   };
 
   // THIS IS OUR EVENT HANDLER FOR WHEN THE YOUTUBE PLAYER'S STATE
@@ -128,6 +128,8 @@ export default function YouTubePlayer() {
     store.changeYouTubeView();
     console.log("current view", store.currentYouTubeVideoView);
   };
+
+  if (!store.youTubeList.published && !store.currentYouTubeVideoView) handleChangeView();
 
   let generateYouTubeView = () => {
     return (
@@ -248,6 +250,8 @@ export default function YouTubePlayer() {
   };
 
   let generateCommentCard = () => {
+   
+    store.updateYouTubeListFromMem();
     let res = [];
 
     for (var i in store.youTubeList.comments) {

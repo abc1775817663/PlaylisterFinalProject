@@ -124,6 +124,9 @@ function ListCard(props) {
     return store.youTubeList._id === idNamePair.list._id;
   };
   let handleClick = async () => {
+    let response = await store.getApi().getPlaylistById(idNamePair.list._id);
+    idNamePair.list = response.data.playlist;
+    
     store.updateYouTubeList(idNamePair.list);
     // store.incListens(idNamePair.list);
 
