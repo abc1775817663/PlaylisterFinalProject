@@ -33,10 +33,10 @@ const HomeScreen = (props) => {
     store.createNewList();
   }
   let content = (pairs) => {
-    console.log(312647,store.homeScreenButtonActive);
+    console.log(312647, store.homeScreenButtonActive);
     let listCard = "";
     if (store) {
-      console.log(9808080321,pairs);
+      console.log(9808080321, pairs);
       listCard = (
         <List sx={{ width: "90%", left: "5%" }}>
           {pairs.map((pair) => (
@@ -77,7 +77,9 @@ const HomeScreen = (props) => {
             left: "40%",
           }}
         >
-          {store.isGuest() && store.homeScreenButtonActive !== 1 ? "" :(
+          {store.isGuest() && store.homeScreenButtonActive !== 1 ? (
+            ""
+          ) : (
             <span>
               <Fab
                 color="primary"
@@ -108,7 +110,7 @@ const HomeScreen = (props) => {
       {store.homeScreenButtonActive === 1
         ? content(store.idNamePairs)
         : content(store.searchedListPairs)}
-    <MUIErrorModal/>
+      <MUIErrorModal />
     </div>
   );
 };

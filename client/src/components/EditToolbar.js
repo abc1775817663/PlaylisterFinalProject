@@ -77,7 +77,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist)&& !playlist.published ? (
+      {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
           disabled={!store.canRedo(playlistId) || modalOpen}
           id="redo-button"
@@ -89,7 +89,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist)&& !playlist.published ? (
+      {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
           disabled={!store.canAddNewSong() || modalOpen}
           id="add-song-button"
@@ -101,7 +101,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist)? (
+      {store.isUserOwnList(playlist) ? (
         <Button onClick={handleDelete} variant="contained">
           <DeleteIcon style={{}} />
         </Button>
@@ -116,7 +116,7 @@ function EditToolbar(props) {
         ""
       )}
 
-      {store.isUserOwnList(playlist)&& !playlist.published ? (
+      {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button onClick={handlePublish} variant="contained">
           <PublishIcon style={{}} />
           publish

@@ -79,8 +79,8 @@ export default function YouTubePlayer() {
       console.log(commentDraft);
     }, 100);
   };
-  let handleSubmit = async(event) => {
-    let response =  await store.getApi().getPlaylistById(store.youTubeList._id);
+  let handleSubmit = async (event) => {
+    let response = await store.getApi().getPlaylistById(store.youTubeList._id);
     store.youTubeList = response.data.playlist;
     if (!store.youTubeList.comments) {
       store.youTubeList.comment = [];
@@ -283,7 +283,7 @@ export default function YouTubePlayer() {
         </Button>
         <Button
           sx={{
-            backgroundColor: !store.currentYouTubeVideoView 
+            backgroundColor: !store.currentYouTubeVideoView
               ? "#91908a"
               : !store.youTubeList.published
               ? "#454343"
@@ -298,7 +298,9 @@ export default function YouTubePlayer() {
             border: "1px solid black",
           }}
           onClick={handleChangeView}
-          disabled={!store.currentYouTubeVideoView || !store.youTubeList.published}
+          disabled={
+            !store.currentYouTubeVideoView || !store.youTubeList.published
+          }
         >
           Comments
         </Button>

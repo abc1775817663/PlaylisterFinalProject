@@ -47,14 +47,13 @@ function SongCard(props) {
     }
   }
 
-  let isYouTubeSong = ()=> { 
-    if (!store.youTubeSong){
-        
-        return false;
+  let isYouTubeSong = () => {
+    if (!store.youTubeSong) {
+      return false;
     }
     // console.log("store youTube list", store.youTubeList)
-    return JSON.stringify(song) === JSON.stringify(store.youTubeSong)
-}
+    return JSON.stringify(song) === JSON.stringify(store.youTubeSong);
+  };
 
   let cardClass = "list-card unselected-list-card";
   return (
@@ -69,7 +68,10 @@ function SongCard(props) {
       onDrop={handleDrop}
       draggable={store.isUserOwnList(playlist)}
       onClick={handleClick}
-      style={{ fontSize: 12, backgroundColor:isYouTubeSong()?"#dae04c":""}}
+      style={{
+        fontSize: 12,
+        backgroundColor: isYouTubeSong() ? "#dae04c" : "",
+      }}
     >
       {index + 1}.
       <a id={"song-" + index + "-link"} className="song-link">

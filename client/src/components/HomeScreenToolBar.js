@@ -15,7 +15,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { Menu, MenuItem, Link } from "@mui/material";
-import LoopIcon from '@mui/icons-material/Loop';
+import LoopIcon from "@mui/icons-material/Loop";
 
 export default function HomeScreenToolBar() {
   const { store } = useContext(GlobalStoreContext);
@@ -25,7 +25,6 @@ export default function HomeScreenToolBar() {
 
   let handleButton1 = () => {
     store.changeHomeScreenButtonActive(1);
-    
   };
   let handleButton2 = () => {
     store.changeHomeScreenButtonActive(2);
@@ -43,16 +42,16 @@ export default function HomeScreenToolBar() {
     setAnchorEl(null);
   };
 
-  const handleRefresh = async() => {
-    await store.loadIdNamePairs().then(() =>
-      store.updateSearchedListPairs(store.lastSearchTerm)
-    )
-  }
+  const handleRefresh = async () => {
+    await store
+      .loadIdNamePairs()
+      .then(() => store.updateSearchedListPairs(store.lastSearchTerm));
+  };
 
-//   let handleSort = (option) => {
-//     store.handleSort(option);
-//     setAnchorEl(null);
-//   };
+  //   let handleSort = (option) => {
+  //     store.handleSort(option);
+  //     setAnchorEl(null);
+  //   };
 
   let searchContent = "";
   let keyPress = async (event) => {
@@ -88,19 +87,44 @@ export default function HomeScreenToolBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => {store.setSortOption("Name");handleMenuClose()}}>
+      <MenuItem
+        onClick={() => {
+          store.setSortOption("Name");
+          handleMenuClose();
+        }}
+      >
         Name (A-Z)
       </MenuItem>
-      <MenuItem onClick={() => {store.setSortOption("Date"); handleMenuClose()}}>
+      <MenuItem
+        onClick={() => {
+          store.setSortOption("Date");
+          handleMenuClose();
+        }}
+      >
         Publish Date (Newest)
       </MenuItem>
-      <MenuItem onClick={() => {store.setSortOption("Listens"); handleMenuClose()}}>
+      <MenuItem
+        onClick={() => {
+          store.setSortOption("Listens");
+          handleMenuClose();
+        }}
+      >
         Listens (High - Low)
       </MenuItem>
-      <MenuItem onClick={() => {store.setSortOption("Likes"); handleMenuClose()}}>
+      <MenuItem
+        onClick={() => {
+          store.setSortOption("Likes");
+          handleMenuClose();
+        }}
+      >
         Likes (High - Low)
       </MenuItem>
-      <MenuItem onClick={() => {store.setSortOption("Dislikes"); handleMenuClose()}}>
+      <MenuItem
+        onClick={() => {
+          store.setSortOption("Dislikes");
+          handleMenuClose();
+        }}
+      >
         Dislikes (High - Low)
       </MenuItem>
     </Menu>
@@ -109,19 +133,18 @@ export default function HomeScreenToolBar() {
   return (
     <div style={{ paddingLeft: "30px" }}>
       <IconButton
-        disabled = {store.isGuest()}
+        disabled={store.isGuest()}
         onClick={handleButton1}
         aria-label="home"
         sx={{ bgcolor: store.homeScreenButtonActive === 1 ? "#99ad9a" : "" }}
       >
         <HomeIcon
-          
           sx={{
             fontSize: 42,
             color: "#736e62",
             marginLeft: "15px",
             marginRight: "15px",
-            color: store.isGuest()?"#ced3db":""
+            color: store.isGuest() ? "#ced3db" : "",
           }}
         />
       </IconButton>
@@ -184,7 +207,7 @@ export default function HomeScreenToolBar() {
             }}
           />
         </IconButton> */}
-        
+
         <span
           style={{
             // verticalAlign: "5%",

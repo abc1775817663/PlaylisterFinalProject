@@ -7,7 +7,12 @@ import MoveSong_Transaction from "../transactions/MoveSong_Transaction";
 import RemoveSong_Transaction from "../transactions/RemoveSong_Transaction";
 import UpdateSong_Transaction from "../transactions/UpdateSong_Transaction";
 import AuthContext from "../auth";
-import { listLike, currentYouTubeSongIndex, sortOption, lastSearchTerm } from "./constants";
+import {
+  listLike,
+  currentYouTubeSongIndex,
+  sortOption,
+  lastSearchTerm,
+} from "./constants";
 /*:""}
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -456,12 +461,8 @@ function GlobalStoreContextProvider(props) {
     let playlist = response.data.playlist;
 
     playlist.name = newName;
-    store.updateCurrentList(playlist).then(
-        store.loadIdNamePairs
-    );
-    
+    store.updateCurrentList(playlist).then(store.loadIdNamePairs);
   };
-
 
   store.changeYouTubeView = function () {
     storeReducer({
@@ -481,36 +482,32 @@ function GlobalStoreContextProvider(props) {
   };
 
   // THIS FUNCTION CREATES A NEW LIST
-  store.getUniquePlaylistName = function(idListPair, name, newList) {
-
+  store.getUniquePlaylistName = function (idListPair, name, newList) {
     let num = -1;
-    if (newList){
-        num++;
+    if (newList) {
+      num++;
     }
-    
-    while (true){
-        let listName = name;
-        if (num >= 0){
-            listName = name + " " + num;
-        }
-        let existed = false;
-        for (const id in idListPair){
-            console.log(idListPair[id].list.name);
-            if (idListPair[id].list.name === listName){
-                
-                existed = true;
-                break;
-            }
 
+    while (true) {
+      let listName = name;
+      if (num >= 0) {
+        listName = name + " " + num;
+      }
+      let existed = false;
+      for (const id in idListPair) {
+        console.log(idListPair[id].list.name);
+        if (idListPair[id].list.name === listName) {
+          existed = true;
+          break;
         }
-        if (existed){
-            num++;
-        }
-        else{
-            return listName;
-        }
+      }
+      if (existed) {
+        num++;
+      } else {
+        return listName;
+      }
     }
-  }
+  };
 
   store.createNewList = async function () {
     let r = await api.getUserAllPlaylistPairs(auth.user.userName);
@@ -547,28 +544,28 @@ function GlobalStoreContextProvider(props) {
   store.duplicateList = async function (playlist, recursive) {
     let r = await api.getUserAllPlaylistPairs(auth.user.userName);
     let idListPairs = r.data.idNamePairs;
-    let existed = idListPairs.reduce((accumulator, currentValue) => currentValue.list.name === playlist.name || accumulator, false);
+    let existed = idListPairs.reduce(
+      (accumulator, currentValue) =>
+        currentValue.list.name === playlist.name || accumulator,
+      false
+    );
     console.log(existed);
     console.log(idListPairs);
 
-    if (existed){
+    if (existed) {
       let copy = JSON.parse(JSON.stringify(playlist));
-      if (!recursive){
-        copy.name += " 0"
-      }
-      else{
-        let num = copy.name.substring(copy.name.length-1);
+      if (!recursive) {
+        copy.name += " 0";
+      } else {
+        let num = copy.name.substring(copy.name.length - 1);
         num = parseInt(num) + 1;
-        copy.name = copy.name.substring(0, copy.name.length-1)+num
-        
+        copy.name = copy.name.substring(0, copy.name.length - 1) + num;
       }
       return store.duplicateList(copy, true);
     }
-    
 
     // let newListName = "Untitled" + store.newListCounter;
     const response = await api.createPlaylist(
-      
       playlist.name,
       [],
       auth.user.email,
@@ -655,19 +652,21 @@ function GlobalStoreContextProvider(props) {
   // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
 
   store.showEditSongModal = async (songIndex, songToEdit, playlist) => {
-
     console.log(3123123, store.currentSong);
-    console.log(3123123, songToEdit)
+    console.log(3123123, songToEdit);
     console.log(12160, store.currentList);
 
     storeReducer({
       type: GlobalStoreActionType.EDIT_SONG,
-      payload: { currentSongIndex: songIndex, currentSong: songToEdit, currentList: playlist },
+      payload: {
+        currentSongIndex: songIndex,
+        currentSong: songToEdit,
+        currentList: playlist,
+      },
     });
   };
 
   store.showRemoveSongModal = async (songIndex, songToRemove, playlist) => {
-
     console.log(12141, playlist);
     storeReducer({
       type: GlobalStoreActionType.REMOVE_SONG,
@@ -817,12 +816,9 @@ function GlobalStoreContextProvider(props) {
     console.log(12153250);
     store.currentModal = CurrentModal.NONE;
 
-    store.updateCurrentList(list).then(
-        () => store.updatePlaylistObj(list).then(
-            store.loadIdNamePairs
-        )
-    );
-
+    store
+      .updateCurrentList(list)
+      .then(() => store.updatePlaylistObj(list).then(store.loadIdNamePairs));
   };
   // store.addNewSong = () => {
   //     let playlistSize = store.getPlaylistSize();
@@ -967,6 +963,7 @@ function GlobalStoreContextProvider(props) {
       payload: playlistObj,
     });
   };
+  
   store.updateYouTubeList = async function (list) {
     store.currentYouTubeSongIndex[0] = 0;
     list.listens++;
@@ -1051,7 +1048,6 @@ function GlobalStoreContextProvider(props) {
         payload: [],
       });
     } else {
-      
       let response;
       console.log(store.homeScreenButtonActive);
       if (store.homeScreenButtonActive < 3) {
@@ -1060,7 +1056,7 @@ function GlobalStoreContextProvider(props) {
         response = await api.getUserPlaylistPairs(searchTerm);
       }
       let searchedList = response.data.idNamePairs;
-      store.handleSort(searchedList)
+      store.handleSort(searchedList);
       console.log(searchedList);
       storeReducer({
         type: GlobalStoreActionType.UPDATE_SEARCHED_LIST,
@@ -1070,25 +1066,23 @@ function GlobalStoreContextProvider(props) {
   };
 
   store.isUserOwnList = (list) => {
-    return auth.user && list.userName === auth.user.userName; 
-  }
+    return auth.user && list.userName === auth.user.userName;
+  };
   store.isGuest = () => {
     return auth.user === null;
-  }
+  };
 
   store.sortOption = sortOption;
 
   store.getApi = () => {
     return api;
-  }
+  };
 
-  store.setSortOption = async(option) => {
+  store.setSortOption = async (option) => {
     store.sortOption[0] = option;
-    store.loadIdNamePairs().then(
-      () => {store.updateSearchedListPairs(lastSearchTerm[0])}
-    );
-    
-    
+    store.loadIdNamePairs().then(() => {
+      store.updateSearchedListPairs(lastSearchTerm[0]);
+    });
   };
 
   store.handleSort = (pairsArray) => {
