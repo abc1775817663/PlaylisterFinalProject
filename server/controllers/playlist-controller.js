@@ -294,12 +294,12 @@ updatePlaylist = async (req, res) => {
                     // list = JSON.parse(JSON.stringify(body.playlist));
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
-                    console.log(41413412, body.playlist.songs)
+            
                     list.dislikedUsers = body.playlist.dislikedUsers;
                     list.likedUsers = body.playlist.likedUsers;
-                    list.likes = body.playlist.likes;
-                    list.dislikes = body.playlist.dislikes;
                     list.comments = body.playlist.comments;
+                    console.log(41413412, JSON.stringify(body.playlist.dislikedUsers))
+                    console.log(41413412, JSON.stringify(list.dislikedUsers))
                     list.published = body.playlist.published;
                     list.publishedDate = body.playlist.publishedDate;
                     list.listens = body.playlist.listens;

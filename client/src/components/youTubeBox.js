@@ -79,11 +79,13 @@ export default function YouTubePlayer() {
       console.log(commentDraft);
     }, 100);
   };
-  let handleSubmit = (event) => {
-    if (!store.youTubeSong.comments) {
-      store.youTubeSong.comment = [];
+  let handleSubmit = async(event) => {
+    let response =  await store.getApi().getPlaylistById(store.youTubeList._id);
+    store.youTubeList = response.data.playlist;
+    if (!store.youTubeList.comments) {
+      store.youTubeList.comment = [];
     }
-    store.youTubeSong.comments.push({
+    store.youTubeList.comments.push({
       user: auth.user.userName,
       content: `${commentDraft}`,
     });
@@ -203,7 +205,7 @@ export default function YouTubePlayer() {
   };
 
   let generateCommentView = () => {
-    console.log("Comment card", store.youTubeSong.comments ? "t" : "f");
+    console.log("Comment card", store.youTubeList.comments ? "t" : "f");
 
     return (
       <div>
@@ -215,7 +217,7 @@ export default function YouTubePlayer() {
             overflow: "scroll",
           }}
         >
-          {store.youTubeSong.comments ? generateCommentCard() : ""}
+          {store.youTubeList.comments ? generateCommentCard() : ""}
         </Box>
 
         {store.isGuest() ? (
@@ -248,8 +250,8 @@ export default function YouTubePlayer() {
   let generateCommentCard = () => {
     let res = [];
 
-    for (var i in store.youTubeSong.comments) {
-      let comment = store.youTubeSong.comments[i];
+    for (var i in store.youTubeList.comments) {
+      let comment = store.youTubeList.comments[i];
 
       let c = <CommentCard user={comment.user} comment={comment.content} />;
       res.push(c);
@@ -281,8 +283,10 @@ export default function YouTubePlayer() {
         </Button>
         <Button
           sx={{
-            backgroundColor: !store.currentYouTubeVideoView
+            backgroundColor: !store.currentYouTubeVideoView 
               ? "#91908a"
+              : !store.youTubeList.published
+              ? "#454343"
               : "#dbdad9",
             color: "black",
             ":hover": {
@@ -294,7 +298,7 @@ export default function YouTubePlayer() {
             border: "1px solid black",
           }}
           onClick={handleChangeView}
-          disabled={!store.currentYouTubeVideoView}
+          disabled={!store.currentYouTubeVideoView || !store.youTubeList.published}
         >
           Comments
         </Button>

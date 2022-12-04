@@ -82,6 +82,7 @@ function ListCard(props) {
     let handleKeyPress = async (event) => {
         if (event.code === "Enter") {
             if (text === idNamePair.list.name){
+                toggleEdit();
                 return;
             }
             let r = await store.getApi().getUserAllPlaylistPairs(auth.user.userName)
@@ -116,27 +117,7 @@ function ListCard(props) {
         store.updatePlaylistObjExpandLess(idNamePair._id);
     }
     
-    let updateLiked = async() => {
-        let playlist = idNamePair.list;
-        if (!playlist.published){
-            return;
-        }
-        if (!playlist.likes){
-            store.updateListLike(idNamePair._id, "liked", false)
-            return;
-        }
-        console.log(3123123, playlist.likedUsers)
-        let likedUsers = playlist.likedUsers.split(",")
-        for (let idx in likedUsers){
-            if (auth.user && auth.user.userName === likedUsers[idx]){
-                console.log("liked")
-                store.updateListLike(idNamePair._id, "liked", true)
-                return;
-            }
-        }
-        console.log("did not like")
-        store.updateListLike(idNamePair._id, "liked", false);
-    }
+    
     let isYouTubeList = ()=> { 
         if (!store.youTubeList){
             console.log("store youTube list",store.youTubeList)
@@ -146,144 +127,80 @@ function ListCard(props) {
         return store.youTubeList._id === idNamePair.list._id;
     }
     let handleClick = async () => {
+        store.updateYouTubeList(idNamePair.list)
         // store.incListens(idNamePair.list);
         
-        await store.updateYouTubeList(idNamePair.list);
+        // await store.loadIdNamePairs().then(
+        //     async() => {
+        //         let response = await store.getApi().getPlaylistById(idNamePair.list._id);
+        //         store.updateYouTubeList(response.data.playlist)
+        //     }
+            
+        // );
         console.log(878970,idNamePair.list);
         
     }
 
-    let updateDisliked = async() => {
-        let playlist = idNamePair.list;
-        if (!playlist.published){
-            return;
-        }
-        if (!playlist.dislikes){
-            store.updateListLike(idNamePair.list, "disliked", false)
-            return;
-        }
+    let handleLike = async (event) => {
 
-        let dislikedUsers = playlist.dislikedUsers.split(",")
-        console.log(3123124, dislikedUsers)
-        for (let idx in dislikedUsers){
-            if (auth.user && auth.user.userName === dislikedUsers[idx]){
-                store.updateListLike(idNamePair.list, "disliked", true)
-                return;
-            }
-        }
-        store.updateListLike(idNamePair.list, "disliked", false);
+        event.stopPropagation()
 
-    }
-    if (! store.checkListLikeExists(idNamePair.list)){
-        updateLiked();
-        updateDisliked();   
-    }
-    
-    
+        let response =  await store.getApi().getPlaylistById(idNamePair.list._id);
+        idNamePair.list = response.data.playlist;
 
-    
-
-    let handleLike = async(event) => {
-        event.stopPropagation();
-        let playlist = idNamePair.list;
-        if (!store.getListLike(idNamePair.list, "liked")){
-            if (playlist.likes > 0){
-                playlist.likedUsers += "," + auth.user.userName;
-            }
-            else{
-                playlist.likedUsers = auth.user.userName;
-            }
-            playlist.likes += 1
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            store.updateListLike(idNamePair.list, "liked", true);
-
+        var index = idNamePair.list.likedUsers.indexOf(auth.user.userName);
+        if (index !== -1) {
+            idNamePair.list.likedUsers.splice(index, 1);
         }
         else{
-            playlist.likes -= 1;
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            console.log(32423434,playlist.likedUsers);
-            let likedUsers = playlist.likedUsers.split(",");
-            let res = "";
-            for (let idx in likedUsers){
-                if (auth.user.userName !== likedUsers[idx]){
-                    res += likedUsers[idx] + ",";
-                }
-            }
-            playlist.likedUsers = res;
-            console.log(32423434,playlist.likedUsers);
-            store.updateListLike(idNamePair.list, "liked", false);
+            idNamePair.list.likedUsers.push(auth.user.userName);
         }
-        if (store.getListLike(idNamePair.list, "disliked")){
-            playlist.dislikes -= 1;
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            let dislikedUsers = playlist.dislikedUsers.split(",");
-            let res = "";
-            for (let idx in dislikedUsers){
-                if (auth.user.userName != dislikedUsers[idx]){
-                    res += dislikedUsers[idx] + ",";
-                }
-            }
-            playlist.dislikedUsers = res;
 
+        var index2 = idNamePair.list.dislikedUsers.indexOf(auth.user.userName);
+        if (index2 !== -1) {
+            idNamePair.list.dislikedUsers.splice(index2, 1);
         }
         
-        store.updateListLike(idNamePair.list, "disliked", false);
-
-        await store.updateCurrentList(playlist);
-        await store.loadIdNamePairs();
-        
+        await store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list).then(
+            () => {
+                store.loadIdNamePairs().then(
+                    () => {store.updateSearchedListPairs(store.lastSearchTerm)}
+              );
+            }
+        )
     }
-    let handleDislike = async(event) => {
-        event.stopPropagation();
-        let playlist = idNamePair.list;
-        if (!store.getListLike(idNamePair.list, "disliked")){
-            if (playlist.dislikes > 0){
-                playlist.dislikedUsers += "," + auth.user.userName;
-            }
-            else{
-                playlist.dislikedUsers = auth.user.userName;
-            }
-            playlist.dislikes += 1;
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            store.updateListLike(idNamePair.list, "disliked", true);
+
+    let handleDislike = async (event) => {
+        
+        event.stopPropagation()
+
+        let response =  await store.getApi().getPlaylistById(idNamePair.list._id);
+        idNamePair.list = response.data.playlist;
+
+        var index = idNamePair.list.dislikedUsers.indexOf(auth.user.userName);
+        if (index !== -1) {
+            idNamePair.list.dislikedUsers.splice(index, 1);
         }
         else{
+            idNamePair.list.dislikedUsers.push(auth.user.userName);
+        }
 
-            playlist.dislikes -= 1;
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            let dislikedUsers = playlist.dislikedUsers.split(",");
-            let res = "";
-            for (let idx in dislikedUsers){
-                if (auth.user.userName != dislikedUsers[idx]){
-                    res += dislikedUsers[idx] + ",";
-                }
-            }
-            playlist.dislikedUsers = res;
-            store.updateListLike(idNamePair._id, "disliked", false);
+        var index2 = idNamePair.list.likedUsers.indexOf(auth.user.userName);
+        if (index2 !== -1) {
+            idNamePair.list.likedUsers.splice(index2, 1);
         }
-        if (store.getListLike(idNamePair._id, "liked")){
-            playlist.likes -= 1;
-            store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list)
-            console.log(32423434,playlist.likedUsers);
-            let likedUsers = playlist.likedUsers.split(",");
-            let res = "";
-            for (let idx in likedUsers){
-                if (auth.user.userName !== likedUsers[idx]){
-                    res += likedUsers[idx] + ",";
-                }
+
+        console.log("dasfadsfadsf",idNamePair.list);
+
+        await store.getApi().updatePlaylistById(idNamePair.list._id, idNamePair.list).then(
+            () => {
+                store.loadIdNamePairs().then(
+                    () => {store.updateSearchedListPairs(store.lastSearchTerm)}
+              );
             }
-            playlist.likedUsers = res;
-            console.log(32423434,playlist.likedUsers);
-            
-        }
-        console.log(32423434, playlist)
-        store.updateListLike(idNamePair._id, "liked", false);
+        )
         
-        
-        await store.updateCurrentList(playlist);
-        await store.loadIdNamePairs();
     }
-
 
     let selectClass = "unselected-list-card";
     if (selected) {
@@ -322,12 +239,12 @@ function ListCard(props) {
                     <IconButton onClick={handleLike} disabled={store.isGuest()} aria-label='edit'>
                     {
                         
-                        !store.getListLike(idNamePair._id, "liked")?
+                        !idNamePair.list.likedUsers.includes(auth.user.userName)?
                         <ThumbUpOffAltIcon style={{fontSize:'25pt'}} />
                         :
                         <ThumbUpIcon style={{fontSize:'25pt'}} />
                     }
-                    <div style={{fontSize:"20px"}}>{idNamePair.list.likes}</div>
+                    <div style={{fontSize:"20px"}}>{idNamePair.list.likedUsers.length}</div>
                     
                     </IconButton>
                     
@@ -344,12 +261,12 @@ function ListCard(props) {
                 
                     <IconButton onClick={handleDislike} disabled={store.isGuest()} aria-label='edit'>
                     {
-                        !store.getListLike(idNamePair._id, "disliked")?
+                        !idNamePair.list.dislikedUsers.includes(auth.user.userName)?
                         <ThumbDownOffAltIcon style={{fontSize:'25pt'}} />
                         :
                         <ThumbDownIcon style={{fontSize:'25pt'}} />
                     }
-                    <div style={{fontSize:"20px"}}>{idNamePair.list.dislikes}</div>
+                    <div style={{fontSize:"20px"}}>{idNamePair.list.dislikedUsers.length}</div>
                     
                     </IconButton>
                     

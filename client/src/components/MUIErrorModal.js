@@ -42,7 +42,7 @@ export default function MUIErrorModal() {
                     
                     <Alert
                     
-                        style = {{fontSize: 20, width:"100%", height: 100}}
+                        style = {{fontSize: 20, width:"90%", height: 100}}
                         severity="error"
                     >
                         {store.errorMessage}

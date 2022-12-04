@@ -454,18 +454,14 @@ function GlobalStoreContextProvider(props) {
     // GET THE LIST
     let response = await api.getPlaylistById(id);
     let playlist = response.data.playlist;
-    
-    
-    
+
     playlist.name = newName;
     store.updateCurrentList(playlist).then(
         store.loadIdNamePairs
     );
     
-    
-    
-
   };
+
 
   store.changeYouTubeView = function () {
     storeReducer({
@@ -1046,6 +1042,7 @@ function GlobalStoreContextProvider(props) {
     });
   };
 
+  store.lastSearchTerm = lastSearchTerm[0];
   store.updateSearchedListPairs = async (searchTerm) => {
     lastSearchTerm[0] = searchTerm;
     if (!searchTerm) {

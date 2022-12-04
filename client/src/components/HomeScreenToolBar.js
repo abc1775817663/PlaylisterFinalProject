@@ -15,6 +15,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import { Menu, MenuItem, Link } from "@mui/material";
+import LoopIcon from '@mui/icons-material/Loop';
 
 export default function HomeScreenToolBar() {
   const { store } = useContext(GlobalStoreContext);
@@ -41,6 +42,12 @@ export default function HomeScreenToolBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handleRefresh = async() => {
+    await store.loadIdNamePairs().then(() =>
+      store.updateSearchedListPairs(store.lastSearchTerm)
+    )
+  }
 
 //   let handleSort = (option) => {
 //     store.handleSort(option);
@@ -168,6 +175,16 @@ export default function HomeScreenToolBar() {
           float: "right",
         }}
       >
+        {/* <IconButton onClick={handleRefresh} aria-label="public">
+          <LoopIcon
+            sx={{
+              fontSize: 40,
+              color: "#736e62",
+              paddingRight: "15px",
+            }}
+          />
+        </IconButton> */}
+        
         <span
           style={{
             // verticalAlign: "5%",

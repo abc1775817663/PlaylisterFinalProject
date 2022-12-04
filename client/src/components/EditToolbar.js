@@ -48,10 +48,10 @@ function EditToolbar(props) {
     playlist.publishedDate =
       d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
 
-    playlist.likes = 0;
-    playlist.dislikes = 0;
-    playlist.likedUsers = "";
-    playlist.dislikedUsers = "";
+    // playlist.likes = 0;
+    // playlist.dislikes = 0;
+    playlist.likedUsers = [];
+    playlist.dislikedUsers = [];
     playlist.comments = "";
     playlist.listens = 0;
 
@@ -101,7 +101,7 @@ function EditToolbar(props) {
       ) : (
         ""
       )}
-      {store.isUserOwnList(playlist)&& !playlist.published ? (
+      {store.isUserOwnList(playlist)? (
         <Button onClick={handleDelete} variant="contained">
           <DeleteIcon style={{}} />
         </Button>
