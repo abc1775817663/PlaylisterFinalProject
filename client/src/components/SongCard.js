@@ -42,7 +42,7 @@ function SongCard(props) {
   function handleClick(event) {
     event.stopPropagation();
     // DOUBLE CLICK IS FOR SONG EDITING
-    if (event.detail === 2) {
+    if (event.detail === 2  && store.homeScreenButtonActive === 1) {
       store.showEditSongModal(index, song, playlist);
     }
   }

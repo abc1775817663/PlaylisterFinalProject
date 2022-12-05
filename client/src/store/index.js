@@ -65,6 +65,8 @@ const CurrentModal = {
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
 function GlobalStoreContextProvider(props) {
+  const { auth } = useContext(AuthContext);
+
   // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
   const [store, setStore] = useState({
     currentModal: CurrentModal.NONE,
@@ -89,7 +91,7 @@ function GlobalStoreContextProvider(props) {
   console.log("inside useGlobalStore");
 
   // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
-  const { auth } = useContext(AuthContext);
+
   console.log("auth: " + auth);
 
   // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -963,7 +965,7 @@ function GlobalStoreContextProvider(props) {
       payload: playlistObj,
     });
   };
-  
+
   store.updateYouTubeList = async function (list) {
     store.currentYouTubeSongIndex[0] = 0;
     list.listens++;
@@ -1080,15 +1082,14 @@ function GlobalStoreContextProvider(props) {
 
   store.setSortOption = async (option) => {
     store.sortOption[0] = option;
-    store.loadIdNamePairs().then(() => {
-      store.updateSearchedListPairs(lastSearchTerm[0]);
-    });
+    if (store.homeScreenButtonActive === 1) await store.loadIdNamePairs();
+    else store.updateSearchedListPairs(lastSearchTerm[0]);
   };
-
-  store.updateYouTubeListFromMem = async() => {
+  
+  store.updateYouTubeListFromMem = async () => {
     let response = await store.getApi().getPlaylistById(store.youTubeList._id);
     store.youTubeList = response.data.playlist;
-  }
+  };
 
   store.handleSort = (pairsArray) => {
     switch (store.sortOption[0]) {
@@ -1137,13 +1138,13 @@ function GlobalStoreContextProvider(props) {
         console.log(pairsArray);
 
         pairsArray.sort((a, b) => {
-          if (a.list.likes === undefined) {
-            a.list.likes = -1;
+          if (a.list.likedUsers === undefined) {
+            return 1;
           }
-          if (b.list.likes === undefined) {
-            b.list.likes = -1;
+          if (b.list.likedUsers === undefined) {
+            return -1;
           }
-          return -(a.list.likes - b.list.likes);
+          return -(a.list.likedUsers.length - b.list.likedUsers.length);
         });
 
         console.log(pairsArray);
@@ -1152,13 +1153,13 @@ function GlobalStoreContextProvider(props) {
         console.log(pairsArray);
 
         pairsArray.sort((a, b) => {
-          if (a.list.dislikes === undefined) {
-            a.list.dislikes = -1;
+          if (a.list.dislikedUsers === undefined) {
+            return 1;
           }
-          if (b.list.dislikes === undefined) {
-            b.list.dislikes = -1;
+          if (b.list.dislikedUsers === undefined) {
+            return -1;
           }
-          return -(a.list.dislikes - b.list.dislikes);
+          return -(a.list.dislikedUsers.length - b.list.dislikedUsers.length);
         });
 
         console.log(pairsArray);

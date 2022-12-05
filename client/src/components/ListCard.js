@@ -124,9 +124,11 @@ function ListCard(props) {
     return store.youTubeList._id === idNamePair.list._id;
   };
   let handleClick = async () => {
+    console.log(5422545262524, idNamePair.list._id)
     let response = await store.getApi().getPlaylistById(idNamePair.list._id);
+    console.log(5422545262524)
     idNamePair.list = response.data.playlist;
-    
+
     store.updateYouTubeList(idNamePair.list);
     // store.incListens(idNamePair.list);
 
@@ -137,6 +139,7 @@ function ListCard(props) {
     //     }
 
     // );
+    console.log(5422545262524)
     console.log(878970, idNamePair.list);
   };
 
@@ -264,7 +267,7 @@ function ListCard(props) {
                 disabled={store.isGuest()}
                 aria-label="edit"
               >
-                {!idNamePair.list.likedUsers.includes(auth.user.userName) ? (
+                {!auth.user||!idNamePair.list.likedUsers.includes(auth.user.userName) ? (
                   <ThumbUpOffAltIcon style={{ fontSize: "25pt" }} />
                 ) : (
                   <ThumbUpIcon style={{ fontSize: "25pt" }} />
@@ -286,7 +289,7 @@ function ListCard(props) {
                 disabled={store.isGuest()}
                 aria-label="edit"
               >
-                {!idNamePair.list.dislikedUsers.includes(auth.user.userName) ? (
+                {!auth.user || !idNamePair.list.dislikedUsers.includes(auth.user.userName) ? (
                   <ThumbDownOffAltIcon style={{ fontSize: "25pt" }} />
                 ) : (
                   <ThumbDownIcon style={{ fontSize: "25pt" }} />

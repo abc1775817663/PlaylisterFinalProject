@@ -91,7 +91,7 @@ function EditToolbar(props) {
       )}
       {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
-          disabled={!store.canAddNewSong() || modalOpen}
+          disabled={modalOpen}
           id="add-song-button"
           onClick={handleAddNewSong}
           variant="contained"

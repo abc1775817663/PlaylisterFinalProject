@@ -22,12 +22,18 @@ import MUIErrorModal from "./MUIErrorModal";
 */
 const HomeScreen = (props) => {
   const { store } = useContext(GlobalStoreContext);
-  const { guest } = props;
 
   useEffect(() => {
     store.loadIdNamePairs();
-    store.changeHomeScreenButtonActive(2);
   }, []);
+
+  // store.changeHomeScreenButtonActive(guest? 2: 1);
+  // if (guest){
+  //   if (store.homeScreenButtonActive < 2){
+  //     store.changeHomeScreenButtonActive(2);
+  //   }
+  // }
+
 
   function handleCreateNewList() {
     store.createNewList();

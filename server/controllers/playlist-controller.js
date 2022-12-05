@@ -113,7 +113,7 @@ getPlaylistById = async (req, res) => {
             // });
         // }
         // asyncFindUser(list);
-    }).catch(err => console.log(err))
+    }).catch(err => console.log("get playlist by id error", err))
 }
 getSearchedPlaylistPairs = async (req, res) => {
     console.log("getSearchedPlaylistPairs");

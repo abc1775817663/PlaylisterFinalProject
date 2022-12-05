@@ -9,6 +9,8 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import CommentCard from "./CommentCard";
 import AuthContext from "../auth";
+import StopIcon from '@mui/icons-material/Stop';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export default function YouTubePlayer() {
   // THIS EXAMPLE DEMONSTRATES HOW TO DYNAMICALLY MAKE A
@@ -129,6 +131,10 @@ export default function YouTubePlayer() {
     console.log("current view", store.currentYouTubeVideoView);
   };
 
+  // let handlePauseContinue = () => {
+    
+  // }
+
   if (!store.youTubeList.published && !store.currentYouTubeVideoView) handleChangeView();
 
   let generateYouTubeView = () => {
@@ -142,8 +148,8 @@ export default function YouTubePlayer() {
         />
 
         <Grid container>
-          <Grid item xs={2} />
-          <Grid item xs={3}>
+        <Grid item xs={2}/>
+          <Grid item xs={2}>
             <Button onClick={decSong} paddingRight={"50%"}>
               <SkipPreviousIcon
                 sx={{
@@ -154,7 +160,29 @@ export default function YouTubePlayer() {
             </Button>
           </Grid>
 
-          <Grid item xs={4}>
+          {/* <Grid item xs={1}>
+            <Button onClick={handlePauseContinue}>
+              <StopIcon
+                sx={{
+                  fontSize: 40,
+                  color: "#736e62",
+                }}
+              />
+            </Button>
+          </Grid>
+                
+          <Grid item xs={1}>
+            <Button onClick={handlePauseContinue}>
+              <PlayArrowIcon
+                sx={{
+                  fontSize: 40,
+                  color: "#736e62",
+                }}
+              />
+            </Button>
+          </Grid> */}
+
+          <Grid item xs={2}>
             <Button onClick={incSong}>
               <SkipNextIcon
                 sx={{
@@ -164,7 +192,9 @@ export default function YouTubePlayer() {
               />
             </Button>
           </Grid>
+
         </Grid>
+        
 
         <Box
           sx={{
