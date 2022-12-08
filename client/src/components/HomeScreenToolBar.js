@@ -25,13 +25,20 @@ export default function HomeScreenToolBar() {
 
   let handleButton1 = () => {
     store.changeHomeScreenButtonActive(1);
+    
   };
   let handleButton2 = () => {
     store.changeHomeScreenButtonActive(2);
+    // setTimeout(() => {
+    //   store.updateSearchedListPairs(store.lastSearchTerm);
+    // }, 200);
   };
 
   let handleButton3 = () => {
     store.changeHomeScreenButtonActive(3);
+    // setTimeout(() => {
+    //   store.updateSearchedListPairs(store.lastSearchTerm);
+    // }, 200);
   };
 
   let handleSortButtonClick = (event) => {
@@ -63,12 +70,21 @@ export default function HomeScreenToolBar() {
       store.updateSearchedListPairs(event.target.value);
     }, 100);
 
-    await setTimeout(() => {
-      if (event.code === "Enter") {
+    await setTimeout(async () => {
+      // if (event.code === "Enter") {
         if (store.homeScreenButtonActive === 1) {
-          handleButton2();
+          
+          if (searchContent === ""){
+            await store.loadIdNamePairs();
+          }
+          else{
+            // await store.loadIdNamePairs();
+            // store.idNamePairs = store.idNamePairs.filter(pair => pair.list.name.startsWith(searchContent));
+            // store.update();
+          }
         }
-      }
+      // }
+
     }, 200);
   };
 

@@ -66,7 +66,7 @@ function SongCard(props) {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      draggable={store.isUserOwnList(playlist)}
+      draggable={!playlist.published&&store.isUserOwnList(playlist)}
       onClick={handleClick}
       style={{
         fontSize: 12,
@@ -77,7 +77,7 @@ function SongCard(props) {
       <a id={"song-" + index + "-link"} className="song-link">
         {song.title} by {song.artist}
       </a>
-      {store.isUserOwnList(playlist) ? (
+      {store.isUserOwnList(playlist) && !playlist.published ? (
         <input
           type="button"
           id={"remove-song-" + index}

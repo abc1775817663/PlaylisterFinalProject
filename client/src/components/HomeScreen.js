@@ -114,7 +114,7 @@ const HomeScreen = (props) => {
     <div>
       <HomeScreenToolBar />
       {store.homeScreenButtonActive === 1
-        ? content(store.idNamePairs)
+        ? (store.lastSearchTerm === "" ? content(store.idNamePairs) : content(store.idNamePairs.filter(pair => pair.list.name.startsWith(store.lastSearchTerm))))
         : content(store.searchedListPairs)}
       <MUIErrorModal />
     </div>

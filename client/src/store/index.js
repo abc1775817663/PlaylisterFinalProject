@@ -607,6 +607,11 @@ function GlobalStoreContextProvider(props) {
       store.handleSort(pairsArray);
       console.log("fdslakj", pairsArray);
 
+      // if (filterFunc !== undefined){
+      //   pairsArray = pairsArray.filter(filterFunc);
+      //   console.log("fdslakj", pairsArray);
+      // }
+
       storeReducer({
         type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
         payload: pairsArray,
@@ -1035,6 +1040,7 @@ function GlobalStoreContextProvider(props) {
   };
 
   store.changeHomeScreenButtonActive = (num) => {
+    
     storeReducer({
       type: GlobalStoreActionType.CHANGE_HOME_SCREEN_BUTTON_ACTIVE,
       payload: num,

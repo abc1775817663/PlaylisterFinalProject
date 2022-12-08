@@ -67,7 +67,7 @@ function EditToolbar(props) {
     <div id="edit-toolbar">
       {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
-          disabled={!store.canUndo(playlistId) || modalOpen}
+          disabled={!store.canUndo(playlistId)}
           id="undo-button"
           onClick={handleUndo}
           variant="contained"
@@ -79,7 +79,7 @@ function EditToolbar(props) {
       )}
       {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
-          disabled={!store.canRedo(playlistId) || modalOpen}
+          disabled={!store.canRedo(playlistId)}
           id="redo-button"
           onClick={handleRedo}
           variant="contained"
@@ -91,7 +91,7 @@ function EditToolbar(props) {
       )}
       {store.isUserOwnList(playlist) && !playlist.published ? (
         <Button
-          disabled={modalOpen}
+          // disabled={modalOpen}
           id="add-song-button"
           onClick={handleAddNewSong}
           variant="contained"
